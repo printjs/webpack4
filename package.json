@@ -1,0 +1,33 @@
+{
+  "name": "webpack4",
+  "version": "1.0.0",
+  "description": "webpack4 ts",
+  "main": "index.js",
+  "scripts": {
+    "server": "node_modules/.bin/ts-node server.ts",
+    "test": "node_modules/.bin/webpack --config webpack.config.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wjtGitHub/webpack4.git"
+  },
+  "author": "yes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wjtGitHub/webpack4/issues"
+  },
+  "homepage": "https://github.com/wjtGitHub/webpack4#readme",
+  "devDependencies": {
+    "@types/node": "^9.4.7",
+    "@types/webpack": "^4.1.0",
+    "fastify": "^1.1.1",
+    "ts-loader": "^4.0.1",
+    "ts-node": "^5.0.1",
+    "typescript": "^2.7.2",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12",
+    "webpack-dev-middleware": "^3.0.1",
+    "webpack-hot-middleware": "^2.21.2"
+  },
+  "dependencies": {}
+}
