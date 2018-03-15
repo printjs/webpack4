@@ -1,6 +1,24 @@
 import * as webpack from "webpack";
 import * as path from "path";
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const autoprefixer = require("autoprefixer");
 
+
+
+
+
+const css = new ExtractTextPlugin({
+    // allChunks: true,
+    filename: "[id].[name].[contenthash].css",
+    disable: process.env.NODE_ENV === "development"
+});
+
+const stylus = new ExtractTextPlugin({
+    // allChunks: true,
+    filename: "[id].[name].[contenthash].css",
+    disable: process.env.NODE_ENV === "development"
+})
 
 const webpackConfig: webpack.Configuration = {
     entry: "./src/main.ts",
@@ -8,9 +26,47 @@ const webpackConfig: webpack.Configuration = {
     module: {
         rules: [
             {
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                enforce: "pre",
+                loader: "tslint-loader"
+            },
+            {
                 test: /\.tsx?$/,
-                use: "ts-loader",
+                loader: "ts-loader",
                 exclude: /node_modules/
+            },
+            {
+                test: /\.css$/,
+                loader: css.extract("style-loader", "css-loader")
+            },
+            {
+                test: /\.styl$/,
+                loader: stylus.extract({
+                    use: [
+                        {
+                            loader: "css-loader",
+                            options: {
+                                minimize: true,
+                                sourceMap: true,
+                            }
+                        },
+                        {
+                            loader: "postcss-loader",
+                            options: {
+                                sourceMap: true,
+                                plugins: () => [autoprefixer]
+                            }
+                        },
+                        {
+                            loader: "stylus-loader",
+                            options: {
+                                sourceMap: true,
+                                paths: "src/resources/"
+                            }
+                        }
+                    ]
+                })
             }
         ]
     },
@@ -20,15 +76,13 @@ const webpackConfig: webpack.Configuration = {
     output: {
         filename: "[name].[hash].js",
         path: path.join(__dirname, "dist"),
-        publicPath: '/'
     },
     devtool: "source-map",
     plugins: [
-        // OccurenceOrderPlugin is needed for webpack 1.x only
-        // new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        // Use NoErrorsPlugin for webpack 1.x
-        // new webpack.NoEmitOnErrorsPlugin()
+        new HtmlWebpackPlugin(),
+        css,
+        stylus,
     ]
 };
 

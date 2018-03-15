@@ -5,10 +5,7 @@ import config from "./webpack.config";
 const fastify = Fastify();
 const compiler = webpack(config);
 
-let temp: any = config.output;
-fastify.use(webpackDevMiddleware(compiler, {
-    publicPath: temp.publicPath
-}));
+fastify.use(webpackDevMiddleware(compiler));
 
 fastify.use(require("webpack-hot-middleware")(compiler))
 
