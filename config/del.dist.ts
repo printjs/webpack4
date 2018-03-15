@@ -3,8 +3,6 @@ import * as path from "path";
 // fs.rmdirSync(path.join(__dirname, "../dist"));
 // fs.unlinkSync(path.join(__dirname, "../dist"));
 
-
-
 function rm_rf(uri: string) {
     let files = [];
     if (fs.existsSync(uri)) {
@@ -20,6 +18,5 @@ function rm_rf(uri: string) {
         fs.rmdirSync(uri);
     }
 }
-
 
 rm_rf(path.join(__dirname, "../dist"));
