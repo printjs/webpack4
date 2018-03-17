@@ -1,9 +1,14 @@
-import "./resources/1.styl";
+// import "./resources/1.css";
+require("./resources/1.css");
 
-export class test {
+export class Test {
     constructor() {
-        console.log("ok");
+        console.log("1111");
     }
 }
 
-console.log(new test());
+
+// if (module.hot) {
+//     module.hot.accept();
+// }
+console.log(new Test());

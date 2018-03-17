@@ -6,72 +6,95 @@ const autoprefixer = require("autoprefixer");
 
 
 
+function env(global_env: any): "development" | "production" {
+    return global_env ? global_env : "development";
+}
+
 
 
 const css = new ExtractTextPlugin({
     // allChunks: true,
     filename: "[id].[name].[contenthash].css",
-    disable: process.env.NODE_ENV === "development"
+    disable: process.env.NODE_ENV === "development",
 });
 
 const stylus = new ExtractTextPlugin({
     // allChunks: true,
     filename: "[id].[name].[contenthash].css",
-    disable: process.env.NODE_ENV === "development"
-})
+    disable: process.env.NODE_ENV === "development",
+});
+
+
+
 
 const webpackConfig: webpack.Configuration = {
-    entry: "./src/main.ts",
-    mode: "development",
+    entry: [
+        "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true",
+        "./src/main.ts",
+    ],
+    mode: env(process.env.NODE_ENV),
+    // context: __dirname,
     module: {
         rules: [
             {
-                test: /\.ts$/,
+                test: /\.tsx?$/,
                 exclude: /node_modules/,
                 enforce: "pre",
-                loader: "tslint-loader"
+                loader: "tslint-loader",
             },
             {
                 test: /\.tsx?$/,
                 loader: "ts-loader",
-                exclude: /node_modules/
+                exclude: /node_modules/,
             },
             {
                 test: /\.css$/,
-                loader: css.extract("style-loader", "css-loader")
-            },
-            {
-                test: /\.styl$/,
-                loader: stylus.extract({
+                loader: css.extract({
+                    fallback: "style-loader",
                     use: [
                         {
                             loader: "css-loader",
                             options: {
                                 minimize: true,
                                 sourceMap: true,
-                            }
+                            },
+                        },
+                    ],
+                }),
+            },
+            {
+                test: /\.styl$/,
+                loader: stylus.extract({
+                    fallback: "style-loader",
+                    use: [
+                        {
+                            loader: "css-loader",
+                            options: {
+                                minimize: true,
+                                sourceMap: true,
+                            },
                         },
                         {
                             loader: "postcss-loader",
                             options: {
                                 sourceMap: true,
-                                plugins: () => [autoprefixer]
-                            }
+                                plugins: () => [autoprefixer],
+                            },
                         },
                         {
                             loader: "stylus-loader",
                             options: {
                                 sourceMap: true,
-                                paths: "src/resources/"
-                            }
-                        }
-                    ]
-                })
-            }
-        ]
+                                paths: "src/resources/",
+                            },
+                        },
+                    ],
+                }),
+            },
+        ],
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".js"]
+        extensions: [".tsx", ".ts", ".js"],
     },
     output: {
         filename: "[name].[hash].js",
@@ -80,10 +103,11 @@ const webpackConfig: webpack.Configuration = {
     devtool: "source-map",
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
         new HtmlWebpackPlugin(),
         css,
         stylus,
-    ]
+    ],
 };
 
 export default webpackConfig;
