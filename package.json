@@ -23,8 +23,13 @@
   "homepage": "https://github.com/wjtGitHub/webpack4#readme",
   "devDependencies": {
     "@types/node": "^9.4.7",
+    "@types/react": "^16.0.40",
+    "@types/react-dom": "^16.0.4",
+    "@types/react-router-dom": "^4.2.5",
     "@types/webpack": "^4.1.0",
     "autoprefixer": "^8.1.0",
+    "babel-loader": "^7.1.4",
+    "connect-history-api-fallback": "^1.5.0",
     "cross-env": "^5.1.4",
     "css-loader": "^0.28.10",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
@@ -34,6 +39,7 @@
     "style-loader": "^0.20.3",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
+    "ts-import-plugin": "^1.4.4",
     "ts-loader": "^4.0.1",
     "ts-node": "^5.0.1",
     "tslint": "^5.9.1",
@@ -44,5 +50,12 @@
     "webpack-dev-middleware": "^3.0.1",
     "webpack-hot-middleware": "^2.21.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "antd": "^3.3.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2"
+  }
 }

@@ -3,6 +3,7 @@ import * as path from "path";
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const autoprefixer = require("autoprefixer");
+const tsImportPluginFactory = require("ts-import-plugin");
 
 
 
@@ -29,10 +30,13 @@ const stylus = new ExtractTextPlugin({
 
 const webpackConfig: webpack.Configuration = {
     entry: [
-        "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true",
-        "./src/main.ts",
+        "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true",
+        "./src/main.tsx",
     ],
     mode: env(process.env.NODE_ENV),
+    devServer: {
+        historyApiFallback: true,
+    },
     // context: __dirname,
     module: {
         rules: [
@@ -44,7 +48,25 @@ const webpackConfig: webpack.Configuration = {
             },
             {
                 test: /\.tsx?$/,
-                loader: "ts-loader",
+                use: [
+                    { loader: "babel-loader" },
+                    {
+                        loader: "ts-loader",
+                        options: {
+                            transpileOnly: true,
+                            getCustomTransformers: () => ({
+                                before: [tsImportPluginFactory({
+                                    libraryName: "antd",
+                                    libraryDirectory: "lib",
+                                    style: "css",
+                                })],
+                            }),
+                            compilerOptions: {
+                                module: "es2015",
+                            },
+                        },
+                    },
+                ],
                 exclude: /node_modules/,
             },
             {
@@ -95,6 +117,10 @@ const webpackConfig: webpack.Configuration = {
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
+        alias: {
+            "@src": path.join(__dirname, "/src"),
+            "@route": path.join(__dirname, "/src/route"),
+        },
     },
     output: {
         filename: "[name].[hash].js",
@@ -104,7 +130,9 @@ const webpackConfig: webpack.Configuration = {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        new HtmlWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            template: path.join(__dirname, "/config/template.html"),
+        }),
         css,
         stylus,
     ],
