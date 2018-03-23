@@ -29,15 +29,19 @@ const stylus = new ExtractTextPlugin({
 
 
 const webpackConfig: webpack.Configuration = {
-    entry: [
-        "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true",
-        "./src/main.tsx",
-    ],
+    // entry: [
+    //     "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true",
+    //     "./src/main.tsx",
+    // ],
+    entry: "./src/main.tsx",
     mode: env(process.env.NODE_ENV),
     devServer: {
+        contentBase: path.join(__dirname, "dist"),
         historyApiFallback: true,
+        compress: true,
+        noInfo: false,
+        hot: true, // hot module replacement. Depends on HotModuleReplacementPlugin         
     },
-    // context: __dirname,
     module: {
         rules: [
             {
@@ -129,7 +133,7 @@ const webpackConfig: webpack.Configuration = {
     devtool: "source-map",
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoEmitOnErrorsPlugin(),
+        new webpack.NamedModulesPlugin(),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "/config/template.html"),
         }),
