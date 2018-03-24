@@ -1,30 +1,30 @@
-import "./resources/1.styl";
+import "./resources/styles/global.styl";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Button } from "antd";
-import { BrowserRouter, Route, Link } from "react-router-dom";
+import { Layout, Icon } from "antd";
+const { Header, Footer, Sider, Content } = Layout;
+import { BrowserRouter } from "react-router-dom";
+import { NavComponent } from "@views/nav/nav";
 
-function About() {
-    return (
-        <h1>hello react-router-dom123123</h1>
-    );
-}
-function App() {
-    return (
-        <React.Fragment>
-            <Link to="/about">about</Link>
-            <Route path="/about" component={About} />
-        </React.Fragment>
-    );
-}
+
 
 ReactDOM.render(
     <BrowserRouter forceRefresh={true}>
-        <React.Fragment>
-            <h1>Hello, react!T</h1>
-            <Button>hello, antd!</Button>
-            <App />
-        </React.Fragment>
+        <Layout>
+            <Sider width={65}>
+                <NavComponent />
+            </Sider>
+            <Layout>
+                <Header style={{ height: 50, background: "#fff", borderBottom: "1px solid #dbdee0" }}></Header>
+                <Content style={{ background: "#fff" }}></Content>
+                <Footer style={{
+                    height: 40, background: "#fff", borderTop: "1px solid #dbdee0", padding: 0, display: "flex",
+                    justifyContent: "center", alignItems: "center",
+                }}>
+                    <span>Copyright © 蚂蚁金融服务集团</span>
+                </Footer>
+            </Layout>
+        </Layout>
     </BrowserRouter>,
     document.getElementById("root"),
 );

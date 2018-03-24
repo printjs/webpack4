@@ -10,7 +10,7 @@
     "rm:rf": "node_modules/.bin/ts-node.cmd config/del.dist.ts",
     "create": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli --config webpack.config.ts",
     "prod": "npm run rm:rf&&npm run create",
-    "start": "node_modules/.bin/webpack-dev-server --hotOnly --watch --port 9999"
+    "start": "node_modules/.bin/webpack-dev-server --hot --watch --port 9999"
   },
   "repository": {
     "type": "git",

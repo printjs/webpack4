@@ -1,9 +1,5 @@
-// import { Router, RouteProps } from "react-router-dom";
-// // import { Router } from "react-router-dom";
+import { RouteProps } from "react-router-dom";
 
-// export const entry: RouteProps[] = [
-//     {
-//         component:,
-//         path:"/"
-//     }
-// ];
+export interface IRouteProps extends RouteProps {
+    icon: string;
+}

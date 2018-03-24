@@ -26,7 +26,7 @@ const stylus = new ExtractTextPlugin({
 });
 
 
-
+console.log(path.join(__dirname, "/src/views/"));
 
 const webpackConfig: webpack.Configuration = {
     // entry: [
@@ -111,7 +111,7 @@ const webpackConfig: webpack.Configuration = {
                             loader: "stylus-loader",
                             options: {
                                 sourceMap: true,
-                                paths: "src/resources/",
+                                paths: "src/resources/styles",
                             },
                         },
                     ],
@@ -122,8 +122,8 @@ const webpackConfig: webpack.Configuration = {
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
         alias: {
-            "@src": path.join(__dirname, "/src"),
-            "@route": path.join(__dirname, "/src/route"),
+            "@route": path.join(__dirname, "/src/route/"),
+            "@views": path.join(__dirname, "/src/views/"),
         },
     },
     output: {
@@ -134,6 +134,7 @@ const webpackConfig: webpack.Configuration = {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "/config/template.html"),
         }),
