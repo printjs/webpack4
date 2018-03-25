@@ -124,6 +124,7 @@ const webpackConfig: webpack.Configuration = {
         alias: {
             "@route": path.join(__dirname, "/src/route/"),
             "@views": path.join(__dirname, "/src/views/"),
+            "@store": path.join(__dirname, "/src/store/"),
         },
     },
     output: {
