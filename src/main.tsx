@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom";
 import { Layout, Icon } from "antd";
 const { Header, Footer, Sider, Content } = Layout;
 import { BrowserRouter } from "react-router-dom";
-import { NavComponent } from "@views/nav/nav";
+import { NavComponent } from "@components/nav/nav";
 import { Provider } from "react-redux";
 import { store } from "@store/store";
 

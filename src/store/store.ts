@@ -1,10 +1,12 @@
-import { createStore } from "redux";
-import { todoNav, IRouteProps } from "@route/index";
+import { createStore, combineReducers } from "redux";
+import { handleRoute, IRouteProps } from "@route/index";
 
 export interface IStore {
-    [extra: string]: IRouteProps[];
+    handleRoute: IRouteProps[];
 }
 
-export const store = createStore(
-    todoNav,
-);
+
+const reducer = combineReducers({
+    handleRoute,
+});
+export const store = createStore(reducer);

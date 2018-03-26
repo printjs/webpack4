@@ -6,7 +6,7 @@ export interface IRouteProps extends RouteProps {
     icon: string;
 }
 
-export function todoNav(state: IRouteProps[] = [], action: {
+export function handleRoute(state: IRouteProps[] = NavRoute, action: {
     type: string;
 }) {
     switch (action.type) {

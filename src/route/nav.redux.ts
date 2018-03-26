@@ -7,7 +7,7 @@ export const GETNAVROUTE = "获取所有的系统导航路由";
 /**
  * action creators
  */
-export function getAllNavRoute() {
+export function getNavRoute() {
     return {
         type: GETNAVROUTE,
     };
