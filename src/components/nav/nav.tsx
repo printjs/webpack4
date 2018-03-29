@@ -4,11 +4,18 @@ const TabPane = Tabs.TabPane;
 import "./nav.styl";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
-import { IRouteProps } from "@route/index";
+import { IRouteProps, history } from "@route/index";
 import { getNavRoute } from "@route/nav.redux";
 
 
 export class Nav extends React.Component<INavTypes, {}> {
+    public go(path?: string) {
+        if (path) {
+            history.replace(path);
+        }
+
+    }
+
     public componentWillMount() {
         this.props.getNavRoute();
     }
@@ -18,7 +25,11 @@ export class Nav extends React.Component<INavTypes, {}> {
             <ul className="nav-component">
                 {NavRoute.map((item, $index) => {
                     return (
-                        <li className="nav-item" key={$index}>
+                        <li className="nav-item" key={$index} onClick={
+                            () => {
+                                this.go(item.path);
+                            }
+                        }>
                             <Icon type={item.icon} />
                         </li>
                     );
