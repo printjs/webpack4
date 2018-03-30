@@ -5,10 +5,21 @@ import "./nav.styl";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
 import { IRouteProps, history } from "@route/index";
-import { getNavRoute } from "@route/nav.redux";
+import { getEntryRoute } from "@route/entry.redux";
+
+interface INavTypes {
+    entryRoute: IRouteProps[];
+    getEntryRoute: () => void;
+}
 
 
 export class Nav extends React.Component<INavTypes, {}> {
+    constructor(props: INavTypes) {
+        super(props);
+        const { getEntryRoute } = this.props;
+        getEntryRoute();
+    }
+
     public go(path?: string) {
         if (path) {
             history.replace(path);
@@ -16,14 +27,11 @@ export class Nav extends React.Component<INavTypes, {}> {
 
     }
 
-    public componentWillMount() {
-        this.props.getNavRoute();
-    }
     public render() {
-        const { NavRoute } = this.props;
+        const { entryRoute } = this.props;
         return (
             <ul className="nav-component">
-                {NavRoute.map((item, $index) => {
+                {entryRoute.map((item, $index) => {
                     return (
                         <li className="nav-item" key={$index} onClick={
                             () => {
@@ -45,13 +53,13 @@ export class Nav extends React.Component<INavTypes, {}> {
 
 const mapStateToProps = (state: IStore) => {
     return {
-        NavRoute: state.handleRoute,
+        entryRoute: state.handleRoute,
     };
 };
 const mapDispatchToProps = (dispatch: (p: any) => void) => {
     return {
-        getNavRoute: () => {
-            dispatch(getNavRoute());
+        getEntryRoute: () => {
+            dispatch(getEntryRoute());
         },
     };
 };
@@ -60,8 +68,3 @@ const mapDispatchToProps = (dispatch: (p: any) => void) => {
 
 export const NavComponent = connect(mapStateToProps, mapDispatchToProps)(Nav);
 
-
-interface INavTypes {
-    NavRoute: IRouteProps[];
-    getNavRoute: () => void;
-}

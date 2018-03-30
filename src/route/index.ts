@@ -1,8 +1,8 @@
 import { RouteProps } from "react-router-dom";
-import { GETNAVROUTE } from "@route/nav.redux";
-import { NavRoute } from "@route/nav.route";
 import { createBrowserHistory } from "history";
 import { AnyAction } from "redux";
+import { entryRoute } from "@route/entry.route";
+import { GETENTRYROUTE } from "@route/entry.redux";
 
 export const history = createBrowserHistory();
 
@@ -10,10 +10,10 @@ export interface IRouteProps extends RouteProps {
     icon: string;
 }
 
-export function handleRoute(state: IRouteProps[] = NavRoute, action: AnyAction) {
+export function handleRoute(state: IRouteProps[] = entryRoute, action: AnyAction) {
     switch (action.type) {
-        case GETNAVROUTE:
-            state = NavRoute;
+        case GETENTRYROUTE:
+            state = entryRoute.slice(0);
         default:
             break;
     }

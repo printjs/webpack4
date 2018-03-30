@@ -3,7 +3,7 @@ import { Note } from "@views/note/note";
 
 
 
-export const NavRoute: IRouteProps[] = [
+export const entryRoute: IRouteProps[] = [
     {
         path: "/note",
         icon: "book",
