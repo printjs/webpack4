@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./note.styl";
 import { Input } from "antd";
-import { NoteCatalogComponent } from "@components/notecatalog/note.catalog";
+import { NoteCatalogComponent } from "@components/notecatalog/index";
 import { NoteTabsComponent } from "@components/notetabs/note.tabs";
 
 
