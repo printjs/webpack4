@@ -19,27 +19,30 @@ fastify.use(require("webpack-hot-middleware")(compiler, {
 
 fastify.use(history());
 
-fastify.use(webpackDevMiddleware(compiler));
+fastify.use(webpackDevMiddleware(compiler, {
+    publicPath: "/",
+}));
 
 
-fastify.addHook("onResponse", (res: any, next: any) => {
-    next();
+
+fastify.get("/**", { logLevel: "warn" }, (request, reply) => {
+    console.log("1");
+    compiler.outputFileSystem.readFile(path.join(__dirname, "/dist/index.html"), (err: Error, result: Buffer) => {
+        if (err) {
+            console.log(err);
+            // return next(err)
+        }
+        console.log(2);
+        console.log(result);
+        reply.header("content-type", "text/html");
+        reply.send(result);
+    });
 });
-// // 通常用于加载静态资源
-// fastify.use(express.static(__dirname + "/dist"));
-
-// // 在你应用 JavaScript 文件中包含了一个 script 标签
-// // 的 index.html 中处理任何一个 route
-// fastify.get("*", (request, response) => {
-//     response.sendFile(path.join("/__webpack_hmr", "index.html"));
-// });
-
 
 
 fastify.listen(9999, (err) => {
     if (err) {
         throw err;
-
     }
     console.log(`server listening on 9999`);
 });

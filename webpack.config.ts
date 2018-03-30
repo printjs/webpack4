@@ -29,11 +29,11 @@ const stylus = new ExtractTextPlugin({
 console.log(path.join(__dirname, "/src/views/"));
 
 const webpackConfig: webpack.Configuration = {
-    // entry: [
-    //     "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true",
-    //     "./src/main.tsx",
-    // ],
-    entry: "./src/main.tsx",
+    entry: [
+        "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true",
+        "./src/main.tsx",
+    ],
+    // entry: "./src/main.tsx",
     mode: env(process.env.NODE_ENV),
     devServer: {
         contentBase: path.join(__dirname, "dist"),
@@ -132,12 +132,12 @@ const webpackConfig: webpack.Configuration = {
     output: {
         filename: "[name].[hash].js",
         path: path.join(__dirname, "dist"),
+        publicPath: "/",
     },
     devtool: "source-map",
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
-        new webpack.NoEmitOnErrorsPlugin(),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "/config/template.html"),
         }),
