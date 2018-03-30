@@ -1,20 +1,26 @@
 import * as React from "react";
 import "./note.styl";
+import { Input } from "antd";
+import { NoteCatalogComponent } from "@components/notecatalog/note.catalog";
+import { NoteTabsComponent } from "@components/notetabs/note.tabs";
+
+
 
 
 export class Note extends React.Component<{}, {}> {
     public render() {
         return (
-            <div className="note-panel">
-                <div className="note-tool-panel">
-                    <div className="note-search-panel"></div>
-                    <div className="note-tree-panel"></div>
+            <React.Fragment>
+                <div className="note-catalog-panel">
+                    <Input placeholder="all note" />
+                    <div className="note-tool-panel">
+                        <NoteCatalogComponent />
+                    </div>
                 </div>
                 <div className="note-work-panel">
-                    <div className="note-operation-panel"></div>
-                    <div className="note-message-panel"></div>
+                    <NoteTabsComponent />
                 </div>
-            </div>   
+            </React.Fragment>
         );
     }
 }

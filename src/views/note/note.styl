@@ -1,13 +1,16 @@
 @import "var.styl"
-.note-panel
+.note-catalog-panel
     display flex
-    height 100%
+    flex-direction column
+    >.ant-input
+        border-radius 0px
     >.note-tool-panel
-        width 200px
+        position relative
+        width auto
         border-right 1px solid $border-line
-        >.note-search-panel
-            height 50px
-            border-bottom 1px solid $border-line
-    >.note-work-panel
-        >.note-operation-panel
-            border-bottom 1px solid $border-line
+        overflow-y auto
+        overflow-x hidden
+        height 100%
+.note-work-panel
+    position relative
+    flex-grow 1

@@ -26,6 +26,9 @@
         "no-console": false,
         "no-consecutive-blank-lines": false,
         "one-variable-per-declaration": false,
+        "prefer-const": false,
+        "no-shadowed-variable": false,
+        "object-literal-shorthand": false,
         "max-line-length": [
             true,
             {
