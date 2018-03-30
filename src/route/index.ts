@@ -4,7 +4,9 @@ import { AnyAction } from "redux";
 import { entryRoute } from "@route/entry.route";
 import { GETENTRYROUTE } from "@route/entry.redux";
 
-export const history = createBrowserHistory();
+export const history = createBrowserHistory({
+    forceRefresh: true,
+});
 
 export interface IRouteProps extends RouteProps {
     icon: string;

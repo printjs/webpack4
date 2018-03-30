@@ -7,6 +7,7 @@ const fastify = Fastify();
 const compiler = webpack(config);
 import * as fs from "fs";
 import * as path from "path";
+const serveStatic = require("serve-static");
 
 
 
@@ -17,7 +18,9 @@ fastify.use(require("webpack-hot-middleware")(compiler, {
 }));
 
 
-fastify.use(history());
+// fastify.use("/", history());
+
+// fastify.use("/", serveStatic(path.join(__dirname, "/dist")));
 
 fastify.use(webpackDevMiddleware(compiler, {
     publicPath: "/",
@@ -25,15 +28,12 @@ fastify.use(webpackDevMiddleware(compiler, {
 
 
 
-fastify.get("/**", { logLevel: "warn" }, (request, reply) => {
-    console.log("1");
+fastify.get("*", { logLevel: "warn" }, (request, reply) => {
     compiler.outputFileSystem.readFile(path.join(__dirname, "/dist/index.html"), (err: Error, result: Buffer) => {
         if (err) {
             console.log(err);
             // return next(err)
         }
-        console.log(2);
-        console.log(result);
         reply.header("content-type", "text/html");
         reply.send(result);
     });
