@@ -1,5 +1,5 @@
 import { IRouteProps } from ".";
-import { Note } from "@views/note/note";
+import { Note } from "@views/note";
 
 
 

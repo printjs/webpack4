@@ -1,68 +1,59 @@
 import { AnyAction } from "redux";
 
-export const GETNOTELIST = "获取笔记目录";
-export const CHANGENOTELIST = "更改笔记目录";
+export const GETNOTETREE = "获取笔记目录";
+export const CHANGENOTETREE = "更改笔记目录";
 export const ADDFILE = "增加文本笔记";
 export const ADDMD = "增加markdown笔记";
 export const UPDATEFILE = "更新笔记";
-export const UPDATENOTELIST = "更新笔记目录状态";
+export const UPDATENOTETREE = "更新笔记目录状态";
 
 
-export interface INotetype {
+
+
+
+
+export interface INoteTree {
     title: string;
-    context: string;
-    type: "file-text" | "file-markdown";
-    status: "r" | "w";
-    id: string;
-    updatetime: string;
-    createtime: string;
-}
-
-
-
-
-export interface INoteList {
-    label: string;
     id: string;
     type: "file-text" | "file-markdown" | "folder-open" | "folder";
-    nodes?: INoteList[];
+    nodes?: INoteTree[];
 }
 
-export function getNoteList() {
+export function getNoteTree() {
     return {
-        type: GETNOTELIST,
+        type: GETNOTETREE,
     };
 }
 
-export function changeNoteList() {
+export function changeNoteTree() {
     return {
-        type: CHANGENOTELIST,
+        type: CHANGENOTETREE,
     };
 }
 
-const initState: INoteList[] = [{
-    label: "mulu1", id: "1", type: "folder", nodes: [
+const initState: INoteTree[] = [{
+    title: "mulu1", id: "1", type: "folder", nodes: [
         {
-            label: "file1", id: "2", type: "file-text",
+            title: "file1", id: "2", type: "file-text",
         },
     ],
 }];
 
-export function handleNoteList(state: INoteList[] = initState, action: AnyAction) {
+export function handleNoteTree(state: INoteTree[] = initState, action: AnyAction) {
     interface IFindType {
-        props: "label" | "id" | "type" | "nodes";
+        props: "title" | "id" | "type" | "nodes";
         value: string;
     }
     switch (action.type) {
-        case GETNOTELIST:
+        case GETNOTETREE:
             break;
-        case CHANGENOTELIST:
+        case CHANGENOTETREE:
             findUnderNote(state, action.id, action.args);
             break;
         default:
             break;
     }
-    function findUnderNote(state: INoteList[], id: string, args: IFindType[]) {
+    function findUnderNote(state: INoteTree[], id: string, args: IFindType[]) {
         for (let item of state) {
             if (item.id === id) {
                 for (let arg of args) {

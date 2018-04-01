@@ -4,8 +4,10 @@ import { connect } from "react-redux";
 const SubMenu = Menu.SubMenu;
 import "./style.styl";
 import { IStore } from "@store/store";
-import { getNoteList, INoteList } from "@components/notecatalog/redux";
+import { getNoteTree, INoteTree } from "@components/notecatalog/redux";
 import { noteRender } from "@components/notecatalog/utils";
+import { addTab } from "@components/notetabs/redux";
+import { getNoteList, INoteType } from "@views/note/redux";
 /**
  * icon
  * file-text
@@ -16,29 +18,44 @@ import { noteRender } from "@components/notecatalog/utils";
  * file-add
  * delete
  */
-
 interface ICatalog {
-    notelist: INoteList[];
-    getNotelist: () => void;
+    noteTree: INoteTree[];
+    noteList: INoteType[];
+    getNoteTree: () => void;
+    addTab: ({}) => void;
+    getNoteList: () => void;
 }
 
 class Note extends React.Component<ICatalog, {}> {
     constructor(props: ICatalog) {
         super(props);
-        const { getNotelist } = this.props;
+        const { getNoteTree, getNoteList } = this.props;
+        getNoteTree();
         getNoteList();
     }
 
     public handleClick = (e: any) => {
-        console.log("click ", e);
+        const { noteList, addTab } = this.props;
+        for (let i = 0, len = noteList.length; i < len; i++) {
+            if (noteList[i].id === e.key) {
+                addTab({
+                    key: noteList[i].id,
+                    title: noteList[i].title,
+                });
+                return;
+            }
+        }
     }
 
     public floderOpenChange = (openKeys: string[]) => {
-        console.log(openKeys);
+        // console.log(openKeys);
+        openKeys.map((item, $index) => {
+            console.log(item);
+        });
     }
 
     public render() {
-        const { notelist } = this.props;
+        const { noteTree } = this.props;
         return (
             <Menu
                 onClick={this.handleClick}
@@ -49,7 +66,7 @@ class Note extends React.Component<ICatalog, {}> {
                 className="note-catalog"
                 onOpenChange={this.floderOpenChange}
             >
-                {noteRender(notelist)}
+                {noteRender(noteTree)}
             </Menu>
         );
     }
@@ -57,14 +74,24 @@ class Note extends React.Component<ICatalog, {}> {
 
 function mapStateToProps(state: IStore) {
     return {
-        notelist: state.handleNoteList,
+        noteTree: state.handleNoteTree,
+        noteList: state.handleNoteList,
     };
 }
 
 
 function mapDispatchToProps(dispatch: (p: any) => void) {
     return {
-        getNotelist: () => {
+        getNoteTree: () => {
+            dispatch(getNoteTree());
+        },
+        addTab: (opt: {
+            key: string;
+            title: string;
+        }) => {
+            dispatch(addTab(opt));
+        },
+        getNoteList: () => {
             dispatch(getNoteList());
         },
     };

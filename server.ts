@@ -32,7 +32,6 @@ fastify.get("*", { logLevel: "warn" }, (request, reply) => {
     compiler.outputFileSystem.readFile(path.join(__dirname, "/dist/index.html"), (err: Error, result: Buffer) => {
         if (err) {
             console.log(err);
-            // return next(err)
         }
         reply.header("content-type", "text/html");
         reply.send(result);

@@ -37,10 +37,19 @@ export interface ITabType {
 export function handleTab(state: ITabType[] = [], action: AnyAction) {
     switch (action.type) {
         case ADDTAB:
-            state.push({
-                title: action.title,
-                key: action.key,
-            });
+            let flag = true;
+            for (let item of state) {
+                if (item.key === action.key) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                state.push({
+                    title: action.title,
+                    key: action.key,
+                });
+            }
             break;
         case UPDATETAB:
             for (let item of state) {

@@ -26,7 +26,7 @@ const stylus = new ExtractTextPlugin({
 });
 
 
-console.log(path.join(__dirname, "/src/views/"));
+
 
 const webpackConfig: webpack.Configuration = {
     entry: [
