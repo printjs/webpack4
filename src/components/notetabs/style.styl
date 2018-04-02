@@ -1,9 +1,30 @@
+@import "var.styl"
+
 .note-tabs
     position absolute
     left 0px
     right 0px
     top 0px
     bottom 0px
+    >.note-tool
+        height 32px
+        display flex
+        border-bottom 1px solid $border-line
+        align-items center
+        font-size 14px
+        padding-left 20px
+        >i 
+            margin-right 10px
+            cursor pointer
+            &:hover
+                color $main-color
     >.ant-tabs
         >.ant-tabs-bar
-            margin-top 22px
+            >.ant-tabs-nav-container
+                height 30px
+                >.ant-tabs-nav-wrap
+                    >.ant-tabs-nav-scroll
+                        >.ant-tabs-nav
+                            >.ant-tabs-tab
+                                >div
+                                    line-height 30px

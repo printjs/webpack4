@@ -1,10 +1,11 @@
 import * as React from "react";
-import { Tabs, Button } from "antd";
+import { Tabs, Button, Icon } from "antd";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
 import { ITabType, updateTab, delTab } from "@components/notetabs/redux";
 const TabPane = Tabs.TabPane;
 import "./style.styl";
+import { isString } from "util";
 
 
 interface INoteTabType {
@@ -29,10 +30,16 @@ class NoteTabs extends React.Component<INoteTabType, {
         this.setState({ activeKey });
     }
 
-    
+
     public remove = (targetKey: string) => {
         const { delTab } = this.props;
         delTab(targetKey);
+    }
+
+    public onEdit = (targetKey: string | React.MouseEvent<HTMLElement>, action: string) => {
+        if (action === "remove" && isString(targetKey)) {
+            this.remove(targetKey);
+        }
     }
 
 
@@ -40,11 +47,17 @@ class NoteTabs extends React.Component<INoteTabType, {
         const { noteTabStore } = this.props;
         return (
             <div className="note-tabs">
+                <div className="note-tool">
+                    <Icon type="eye" />
+                    <Icon type="tags" />
+                    <Icon type="link" />
+                </div>
                 <Tabs
                     hideAdd
                     onChange={this.onChange}
                     activeKey={this.state.activeKey}
                     type="editable-card"
+                    onEdit={this.onEdit}
                 >
                     {noteTabStore.map((pane) => <TabPane tab={pane.title} key={pane.key}>{pane.title}</TabPane>)}
                 </Tabs>
