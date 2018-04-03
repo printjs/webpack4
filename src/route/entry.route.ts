@@ -1,5 +1,5 @@
 import { IRouteProps } from ".";
-import { Note } from "@views/note";
+import { NoteComponent } from "@views/note";
 
 
 
@@ -7,6 +7,6 @@ export const entryRoute: IRouteProps[] = [
     {
         path: "/note",
         icon: "book",
-        component: Note,
+        component: NoteComponent,
     },
 ];

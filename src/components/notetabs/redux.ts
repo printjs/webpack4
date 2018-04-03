@@ -31,6 +31,7 @@ export function delTab(key: string) {
 export interface ITabType {
     title: string;
     key: string;
+    closable?: boolean;
 }
 
 
@@ -45,10 +46,18 @@ export function handleTab(state: ITabType[] = [], action: AnyAction) {
                 }
             }
             if (flag) {
-                state.push({
-                    title: action.title,
-                    key: action.key,
-                });
+                if (action.key === "welcome") {
+                    state.push({
+                        title: action.title,
+                        key: action.key,
+                        closable: false,
+                    });
+                } else {
+                    state.push({
+                        title: action.title,
+                        key: action.key,
+                    });
+                }
             }
             break;
         case UPDATETAB:

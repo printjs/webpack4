@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Tabs, Button, Icon } from "antd";
+import { Tabs, Button, Icon, Input } from "antd";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
-import { ITabType, updateTab, delTab } from "@components/notetabs/redux";
+import { ITabType, updateTab, delTab, addTab } from "@components/notetabs/redux";
 const TabPane = Tabs.TabPane;
 import "./style.styl";
 import { isString } from "util";
@@ -12,18 +12,23 @@ interface INoteTabType {
     noteTabStore: ITabType[];
     updateTab: (opt: ITabType) => void;
     delTab: (opt: string) => void;
+    addTab: (opt: ITabType) => void;
 }
 
 
 class NoteTabs extends React.Component<INoteTabType, {
     activeKey: string;
 }> {
-    public newTabIndex: number = 0;
     constructor(props: INoteTabType) {
         super(props);
+        const { addTab } = this.props;
         this.state = {
-            activeKey: "0",
+            activeKey: "welcome",
         };
+        addTab({
+            key: "welcome",
+            title: "欢迎页",
+        });
     }
 
     public onChange = (activeKey: string) => {
@@ -48,6 +53,9 @@ class NoteTabs extends React.Component<INoteTabType, {
         return (
             <div className="note-tabs">
                 <div className="note-tool">
+                    <div className="note-title">
+                        <Input placeholder="标题" size="small" />
+                    </div>
                     <Icon type="eye" />
                     <Icon type="tags" />
                     <Icon type="link" />
@@ -59,7 +67,11 @@ class NoteTabs extends React.Component<INoteTabType, {
                     type="editable-card"
                     onEdit={this.onEdit}
                 >
-                    {noteTabStore.map((pane) => <TabPane tab={pane.title} key={pane.key}>{pane.title}</TabPane>)}
+                    {noteTabStore.map((pane) =>
+                        <TabPane tab={pane.title} key={pane.key} closable={pane.closable === false ? false : true}>
+                            {pane.title}
+                        </TabPane>,
+                    )}
                 </Tabs>
             </div>
         );
@@ -79,6 +91,9 @@ function mapDispatchToProps(dispatch: (p: any) => void) {
         },
         delTab: (key: string) => {
             dispatch(delTab(key));
+        },
+        addTab: (opt: ITabType) => {
+            dispatch(addTab(opt));
         },
     };
 }

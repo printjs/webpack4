@@ -1,2 +1,21 @@
 .note-catalog
-    border-right 0px solid red
+    border-right-width 0
+    .ant-menu-item
+        margin 0 !important 
+        height 30px !important
+        line-height 30px !important
+        >.del
+            display none  
+            margin-left 20px
+        &:hover
+            >.del
+                display inline-block
+    .ant-menu-submenu-title
+        margin 0
+        height 30px !important
+        line-height 30px !important 
+.noteTree-operation
+    display flex
+    >i 
+        margin-right 10px
+        cursor pointer
