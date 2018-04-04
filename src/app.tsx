@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { Layout, Icon } from "antd";
 const { Header, Footer, Sider, Content } = Layout;
-import { BrowserRouter, Route } from "react-router-dom";
+import { HashRouter, Route } from "react-router-dom";
 import { NavComponent } from "@components/nav/nav";
 import { getEntryRoute } from "@route/entry.redux";
 import { IStore } from "@store/store";
@@ -25,7 +25,7 @@ export class App extends React.Component<IAppTypes, {}> {
     public render() {
         const { entryRoute } = this.props;
         return (
-            <BrowserRouter forceRefresh={true}>
+            <HashRouter>
                 <Layout>
                     <Sider width={65}>
                         <NavComponent />
@@ -49,7 +49,7 @@ export class App extends React.Component<IAppTypes, {}> {
                         </Footer>
                     </Layout>
                 </Layout>
-            </BrowserRouter>
+            </HashRouter>
         );
     }
 }

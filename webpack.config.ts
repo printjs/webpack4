@@ -132,7 +132,7 @@ const webpackConfig: webpack.Configuration = {
     output: {
         filename: "[name].[hash].js",
         path: path.join(__dirname, "dist"),
-        publicPath: "/",
+        // publicPath: "/",
     },
     devtool: "source-map",
     plugins: [

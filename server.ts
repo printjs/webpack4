@@ -23,20 +23,20 @@ fastify.use(require("webpack-hot-middleware")(compiler, {
 // fastify.use("/", serveStatic(path.join(__dirname, "/dist")));
 
 fastify.use(webpackDevMiddleware(compiler, {
-    publicPath: "/",
+    // publicPath: "/",
 }));
 
 
 
-fastify.get("*", { logLevel: "warn" }, (request, reply) => {
-    compiler.outputFileSystem.readFile(path.join(__dirname, "/dist/index.html"), (err: Error, result: Buffer) => {
-        if (err) {
-            console.log(err);
-        }
-        reply.header("content-type", "text/html");
-        reply.send(result);
-    });
-});
+// fastify.get("*", { logLevel: "warn" }, (request, reply) => {
+//     compiler.outputFileSystem.readFile(path.join(__dirname, "/dist/index.html"), (err: Error, result: Buffer) => {
+//         if (err) {
+//             console.log(err);
+//         }
+//         reply.header("content-type", "text/html");
+//         reply.send(result);
+//     });
+// });
 
 
 fastify.listen(9999, (err) => {

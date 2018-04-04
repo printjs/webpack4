@@ -10,7 +10,8 @@
     "rm:rf": "node_modules/.bin/ts-node.cmd config/del.dist.ts",
     "create": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli --config webpack.config.ts",
     "prod": "npm run rm:rf&&npm run create",
-    "start": "node_modules/.bin/webpack-dev-server --hot --watch --port 9999"
+    "start": "node_modules/.bin/webpack-dev-server --hot --watch --port 9999",
+    "window":"node_modules/.bin/electron ."
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
     "connect-history-api-fallback": "^1.5.0",
     "cross-env": "^5.1.4",
     "css-loader": "^0.28.10",
+    "electron": "^1.8.4",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "fastify": "^1.1.1",
     "html-webpack-plugin": "^3.0.6",

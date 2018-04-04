@@ -1,12 +1,10 @@
 import { RouteProps } from "react-router-dom";
-import { createBrowserHistory } from "history";
+import { createBrowserHistory, createHashHistory } from "history";
 import { AnyAction } from "redux";
 import { entryRoute } from "@route/entry.route";
 import { GETENTRYROUTE } from "@route/entry.redux";
 
-export const history = createBrowserHistory({
-    forceRefresh: true,
-});
+export const history = createHashHistory();
 
 export interface IRouteProps extends RouteProps {
     icon: string;
