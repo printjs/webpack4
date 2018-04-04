@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Menu, Icon, Popover } from "antd";
+import { Menu, Icon, Popover, Modal, Input } from "antd";
 import { connect } from "react-redux";
 const SubMenu = Menu.SubMenu;
 import "./style.styl";
@@ -27,12 +27,18 @@ interface ICatalog {
     delInTree: (id: string) => void;
 }
 
-class Note extends React.Component<ICatalog, {}> {
+class Note extends React.Component<ICatalog, {
+    visible: boolean;
+}> {
+    public defaultValue: string = "";
     constructor(props: ICatalog) {
         super(props);
         const { getNoteTree, getNoteList } = this.props;
         getNoteTree();
         getNoteList();
+        this.state = {
+            visible: false,
+        };
     }
 
     public handleClick = (e: any) => {
@@ -70,7 +76,30 @@ class Note extends React.Component<ICatalog, {}> {
         const { delInTree } = this.props;
         // e.preventDefault();
         delInTree(id);
+    }
 
+    public hideModal = (type: "ok" | "cancel") => {
+        switch (type) {
+            case "ok":
+                console.log(this.defaultValue);
+            default:
+                this.setState({
+                    visible: false,
+                });
+                break;
+        }
+    }
+
+    public openModal = (item: INoteTree, e: any) => {
+        e.stopPropagation();
+        this.setState({
+            visible: true,
+        });
+    }
+
+    public changeFolderName = (e: any) => {
+        console.log(e.target.value);
+        this.defaultValue = e.target.value;
     }
 
     public render() {
@@ -81,8 +110,8 @@ class Note extends React.Component<ICatalog, {}> {
                 <div className="noteTree-operation">
                     <Icon type="folder-add" onClick={this.test} />
                     <Icon type="file-add" onClick={this.test} />
-                    <Icon type="edit" onClick={this.test} />
-                    <Icon type="delete" onClick={this.test} />
+                    <Icon type="edit" onClick={(e) => { this.openModal(item, e); }} />
+                    <Icon type="delete" onClick={(e) => { this.del(item.id, e); }} />
                 </div>
             );
         };
@@ -123,18 +152,32 @@ class Note extends React.Component<ICatalog, {}> {
         };
 
         return (
-            <Menu
-                onClick={this.handleClick}
-                style={{ width: 256 }}
-                defaultSelectedKeys={["welcome"]}
-                defaultOpenKeys={["sub1"]}
-                mode="inline"
-                className="note-catalog"
-                onOpenChange={this.floderOpenChange}
-                onSelect={this.onSelect}
-            >
-                {noteRender(noteTree)}
-            </Menu>
+            <React.Fragment>
+                <Menu
+                    onClick={this.handleClick}
+                    style={{ width: 256 }}
+                    defaultSelectedKeys={["welcome"]}
+                    defaultOpenKeys={["sub1"]}
+                    mode="inline"
+                    className="note-catalog"
+                    onOpenChange={this.floderOpenChange}
+                    onSelect={this.onSelect}
+                >
+                    {noteRender(noteTree)}
+                </Menu>
+                <Modal
+                    title="修改文件夹名称"
+                    visible={this.state.visible}
+                    onOk={() => this.hideModal("ok")}
+                    wrapClassName="vertical-center-modal"
+                    className="change-folder-name"
+                    onCancel={() => this.hideModal("cancel")}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                    <Input defaultValue={this.defaultValue} onChange={this.changeFolderName} />
+                </Modal>
+            </React.Fragment>
         );
     }
 }

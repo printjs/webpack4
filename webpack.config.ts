@@ -29,7 +29,7 @@ const stylus = new ExtractTextPlugin({
 
 
 const webpackConfig: webpack.Configuration = {
-    entry: [
+    entry: process.env.NODE_ENV === "production" ? "./src/main.tsx" : [
         "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true",
         "./src/main.tsx",
     ],
