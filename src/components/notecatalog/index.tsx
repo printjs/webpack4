@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 const SubMenu = Menu.SubMenu;
 import "./style.styl";
 import { IStore } from "@store/store";
-import { getNoteTree, INoteTree, delInTree } from "@components/notecatalog/redux";
+import { getNoteTree, INoteTree, delInTree, changeInTree, IFindType, insertInTree } from "@components/notecatalog/redux";
 import { addTab } from "@components/notetabs/redux";
 import { getNoteList, INoteType } from "@views/note/redux";
 /**
@@ -25,12 +25,18 @@ interface ICatalog {
     getNoteList: () => void;
     getSelectedKeys: (keys: string[]) => void;
     delInTree: (id: string) => void;
+    changeInTree: (id: string, args: IFindType[]) => void;
+    insertInTree: (id: string, args: IFindType[]) => void;
 }
 
 class Note extends React.Component<ICatalog, {
     visible: boolean;
 }> {
-    public defaultValue: string = "";
+    public selectedNode: INoteTree = {
+        title: "",
+        id: "",
+        filetype: "folder",
+    };
     constructor(props: ICatalog) {
         super(props);
         const { getNoteTree, getNoteList } = this.props;
@@ -81,7 +87,8 @@ class Note extends React.Component<ICatalog, {
     public hideModal = (type: "ok" | "cancel") => {
         switch (type) {
             case "ok":
-                console.log(this.defaultValue);
+                const { changeInTree } = this.props;
+                changeInTree(this.selectedNode.id, [{ props: "title", value: this.selectedNode.title }]);
             default:
                 this.setState({
                     visible: false,
@@ -95,11 +102,35 @@ class Note extends React.Component<ICatalog, {
         this.setState({
             visible: true,
         });
+        this.selectedNode = item;
     }
 
     public changeFolderName = (e: any) => {
-        console.log(e.target.value);
-        this.defaultValue = e.target.value;
+        this.selectedNode.title = e.target.value;
+    }
+
+    // 插入文件或者文件夹
+    public insertFF = (item: INoteTree, e: any) => {
+        e.stopPropagation();
+        const { insertInTree } = this.props;
+        insertInTree(item.id, [
+            {
+                props: "id",
+                value: new Date().getTime() + "",
+            },
+            {
+                props: "title",
+                value: "新建文件夹",
+            },
+            {
+                props: "filetype",
+                value: "folder",
+            },
+            {
+                props: "nodes",
+                value: [],
+            },
+        ]);
     }
 
     public render() {
@@ -108,8 +139,8 @@ class Note extends React.Component<ICatalog, {
         const content = (item: INoteTree) => {
             return (
                 <div className="noteTree-operation">
-                    <Icon type="folder-add" onClick={this.test} />
-                    <Icon type="file-add" onClick={this.test} />
+                    <Icon type="folder-add" onClick={(e) => { this.insertFF(item, e); }} />
+                    <Icon type="file-add" onClick={(e) => { this.insertFF(item, e); }} />
                     <Icon type="edit" onClick={(e) => { this.openModal(item, e); }} />
                     <Icon type="delete" onClick={(e) => { this.del(item.id, e); }} />
                 </div>
@@ -175,7 +206,7 @@ class Note extends React.Component<ICatalog, {
                     okText="确认"
                     cancelText="取消"
                 >
-                    <Input defaultValue={this.defaultValue} onChange={this.changeFolderName} />
+                    <Input defaultValue={this.selectedNode.title} onChange={this.changeFolderName} />
                 </Modal>
             </React.Fragment>
         );
@@ -208,6 +239,12 @@ function mapDispatchToProps(dispatch: (p: any) => void) {
         },
         delInTree: (id: string) => {
             dispatch(delInTree(id));
+        },
+        changeInTree: (id: string, args: IFindType[]) => {
+            dispatch(changeInTree(id, args));
+        },
+        insertInTree: (id: string, args: IFindType[]) => {
+            dispatch(insertInTree(id, args));
         },
     };
 }

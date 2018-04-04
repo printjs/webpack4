@@ -1,9 +1,10 @@
 import { AnyAction } from "redux";
 
 export const GETNOTETREE = "获取笔记目录";
-export const CHANGENOTETREE = "更改笔记目录";
+export const CHANGEINTREE = "更改笔记目录";
 export const ADDINTREE = "增加root级别笔记和文件夹";
 export const DELINTREE = "删除文件或文件夹在树中";
+export const INSERTINTREE = "向笔记树中插入文件或者文件夹";
 export const UPDATEFILEINTREE = "更新笔记";
 export const UPDATENOTETREE = "更新笔记目录状态";
 
@@ -43,9 +44,26 @@ export function delInTree(key: string) {
     };
 }
 
-export function changeNoteTree() {
+
+export interface IFindType {
+    props: "title" | "id" | "filetype" | "nodes";
+    value: string | INoteTree[];
+}
+
+export function changeInTree(id: string, args: IFindType[]) {
     return {
-        type: CHANGENOTETREE,
+        type: CHANGEINTREE,
+        id,
+        args,
+    };
+}
+
+
+export function insertInTree(id: string, args: IFindType[]) {
+    return {
+        type: INSERTINTREE,
+        id,
+        args,
     };
 }
 
@@ -64,15 +82,14 @@ const initState: INoteTree[] = [
     }];
 
 export function handleNoteTree(state: INoteTree[] = initState, action: AnyAction) {
-    interface IFindType {
-        props: "title" | "id" | "filetype" | "nodes";
-        value: string;
-    }
     switch (action.type) {
         case GETNOTETREE:
             break;
-        case CHANGENOTETREE:
-            // findUnderNote(state, action.id, action.args);
+        case INSERTINTREE:
+            findUnderNote(state, action.id, action.args, "insert");
+            break;
+        case CHANGEINTREE:
+            findUnderNote(state, action.id, action.args, "change");
             break;
         case ADDINTREE:
             if (action.filetype.indexOf("folder") === -1) {
@@ -99,12 +116,24 @@ export function handleNoteTree(state: INoteTree[] = initState, action: AnyAction
             if (state[i].id === id) {
                 switch (operation) {
                     case "insert":
+                        let param: any = {};
                         for (let arg of args) {
-                            state[i][arg.props] = arg.value;
+                            param[arg.props] = arg.value;
+                        }
+                        if (state[i].filetype.indexOf("folder") !== -1) {
+                            state[i].nodes.push(param);
+                        } else {
+                            state.splice(i, 1, param);
                         }
                         break;
                     case "del":
                         state.splice(i, 1);
+                        break;
+                    case "change":
+                        for (let arg of args) {
+                            state[i][arg.props] = arg.value;
+                        }
+                        break;
                     default:
                         break;
                 }
