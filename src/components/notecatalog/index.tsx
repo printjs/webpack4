@@ -4,9 +4,20 @@ import { connect } from "react-redux";
 const SubMenu = Menu.SubMenu;
 import "./style.styl";
 import { IStore } from "@store/store";
-import { getNoteTree, INoteTree, delInTree, changeInTree, IFindType, insertInTree } from "@components/notecatalog/redux";
+import {
+    getNoteTree,
+    INoteTree,
+    delInTree,
+    changeInTree,
+    IFindType,
+    insertInTree,
+    openKeys,
+    selectedKeys,
+    IcatalogStatusType,
+} from "@components/notecatalog/redux";
 import { addTab } from "@components/notetabs/redux";
 import { getNoteList, INoteType } from "@views/note/redux";
+import { generator } from "@utils/generator";
 /**
  * icon
  * file-text
@@ -20,6 +31,7 @@ import { getNoteList, INoteType } from "@views/note/redux";
 interface ICatalog {
     noteTree: INoteTree[];
     noteList: INoteType[];
+    catalogStatus: IcatalogStatusType;
     getNoteTree: () => void;
     addTab: ({ }) => void;
     getNoteList: () => void;
@@ -27,6 +39,8 @@ interface ICatalog {
     delInTree: (id: string) => void;
     changeInTree: (id: string, args: IFindType[]) => void;
     insertInTree: (id: string, args: IFindType[]) => void;
+    openKeys: (keys: string[]) => void;
+    selectedkeys: (keys: string[]) => void;
 }
 
 class Note extends React.Component<ICatalog, {
@@ -60,22 +74,16 @@ class Note extends React.Component<ICatalog, {
         }
     }
 
-    public floderOpenChange = (openKeys: string[]) => {
-        // console.log(openKeys);
-        openKeys.map((item, $index) => {
-            console.log(item);
-        });
+    public floderOpenChange = (okeys: string[]) => {
+        const { openKeys } = this.props;
+        openKeys(okeys);
     }
 
-    public onSelect = ({ item, key, selectedKeys }: any) => {
-        const { getSelectedKeys } = this.props;
-        getSelectedKeys(selectedKeys);
+    public onSelect = ({ item, key, skeys }: any) => {
+        const { getSelectedKeys, selectedkeys } = this.props;
+        selectedkeys([key]);
     }
 
-    public test(e: any) {
-        e.stopPropagation();
-        console.log("Test");
-    }
 
     public del = (id: string, e: any) => {
         e.stopPropagation();
@@ -113,10 +121,11 @@ class Note extends React.Component<ICatalog, {
     public insertFF = (item: INoteTree, e: any) => {
         e.stopPropagation();
         const { insertInTree } = this.props;
+        let temp = new Date().getTime() + "";
         insertInTree(item.id, [
             {
                 props: "id",
-                value: new Date().getTime() + "",
+                value: generator.createId(temp),
             },
             {
                 props: "title",
@@ -181,14 +190,15 @@ class Note extends React.Component<ICatalog, {
                 }
             });
         };
-
+        const { catalogStatus } = this.props;
         return (
             <React.Fragment>
                 <Menu
                     onClick={this.handleClick}
                     style={{ width: 256 }}
-                    defaultSelectedKeys={["welcome"]}
-                    defaultOpenKeys={["sub1"]}
+                    openKeys={catalogStatus.openkeys}
+                    // defaultSelectedKeys={catalogStatus.selectedkeys}
+                    // defaultOpenKeys={catalogStatus.openkeys}
                     mode="inline"
                     className="note-catalog"
                     onOpenChange={this.floderOpenChange}
@@ -219,6 +229,7 @@ function mapStateToProps(state: IStore, props: {
     return {
         noteTree: state.handleNoteTree,
         noteList: state.handleNoteList,
+        catalogStatus: state.handleCatalogStatus,
     };
 }
 
@@ -246,8 +257,16 @@ function mapDispatchToProps(dispatch: (p: any) => void) {
         insertInTree: (id: string, args: IFindType[]) => {
             dispatch(insertInTree(id, args));
         },
+        openKeys: (keys: string[]) => {
+            dispatch(openKeys(keys));
+        },
+        selectedkeys: (keys: string[]) => {
+            dispatch(selectedKeys(keys));
+        },
     };
 }
+
+
 
 
 export const NoteCatalogComponent = connect(mapStateToProps, mapDispatchToProps)(Note);

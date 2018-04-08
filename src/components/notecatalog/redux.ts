@@ -112,6 +112,14 @@ export function handleNoteTree(state: INoteTree[] = initState, action: AnyAction
             break;
     }
     function findUnderNote(state: INoteTree[], id: string, args: IFindType[], operation: "del" | "insert" | "change") {
+        if (id === "" && operation === "insert") {
+            let param: any = {};
+            for (let arg of args) {
+                param[arg.props] = arg.value;
+            }
+            state.push(param);
+            return false;
+        }
         for (let i = 0, len = state.length; i < len; i++) {
             if (state[i].id === id) {
                 switch (operation) {
@@ -123,7 +131,7 @@ export function handleNoteTree(state: INoteTree[] = initState, action: AnyAction
                         if (state[i].filetype.indexOf("folder") !== -1) {
                             state[i].nodes.push(param);
                         } else {
-                            state.splice(i, 1, param);
+                            state.push(param);
                         }
                         break;
                     case "del":
@@ -148,5 +156,46 @@ export function handleNoteTree(state: INoteTree[] = initState, action: AnyAction
         return typeof x !== "undefined";
     }
     return state.slice(0);
+}
+
+
+export const OPENKEYS = "打开的笔记目录";
+export const SELECTEDKEYS = "选中的节点";
+
+
+export const openKeys = (openkeys: string[]) => {
+    return {
+        type: OPENKEYS,
+        openkeys,
+    };
+};
+
+export const selectedKeys = (selectedKeys: string[]) => {
+    return {
+        type: SELECTEDKEYS,
+        selectedKeys,
+    };
+};
+
+
+export interface IcatalogStatusType {
+    openkeys: string[];
+    selectedKeys: string[];
+}
+
+
+export function handleCatalogStatus(state: IcatalogStatusType = { openkeys: [], selectedKeys: [] }, action: AnyAction) {
+    switch (action.type) {
+        case OPENKEYS:
+            return Object.assign({}, state, {
+                openkeys: action.openkeys,
+            });
+        case SELECTEDKEYS:
+            return Object.assign({}, state, {
+                selectedKeys: action.selectedKeys,
+            });
+        default:
+            return state;
+    }
 }
 

@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import * as moment from "moment";
+import moment from "moment";
 
 export const GETNOTELIST = "获取所有笔记的列表";
 export const ADDFOLDERINLIST = "在笔记列表中添加文件夹";
@@ -63,8 +63,8 @@ export function handleNoteList(state: INoteType[] = notelist, action: AnyAction)
                 filetype: action.filetype,
                 context: "新建内容",
                 status: "r",
-                updatetime: new Date() + "",
-                createtime: new Date() + "",
+                updatetime: moment(new Date()).format("YYYY-MM-DD"),
+                createtime: moment(new Date()).format("YYYY-MM-DD"),
                 parentId: action.pId,
             };
             state.push(params);
@@ -72,5 +72,6 @@ export function handleNoteList(state: INoteType[] = notelist, action: AnyAction)
         default:
             break;
     }
+
     return state.slice(0);
 }
