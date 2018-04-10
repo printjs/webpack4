@@ -7,10 +7,8 @@ import { IStore } from "@store/store";
 import {
     getNoteTree,
     INoteTree,
-    delInTree,
     changeInTree,
     IFindType,
-    insertInTree,
     openKeys,
     selectedKeys,
     IcatalogStatusType,
@@ -18,6 +16,7 @@ import {
 import { addTab } from "@components/notetabs/redux";
 import { getNoteList, INoteType } from "@views/note/redux";
 import { generator } from "@utils/generator";
+import { noteUtils } from "@utils/note";
 /**
  * icon
  * file-text
@@ -36,9 +35,7 @@ interface ICatalog {
     addTab: ({ }) => void;
     getNoteList: () => void;
     getSelectedKeys: (keys: string[]) => void;
-    delInTree: (id: string) => void;
     changeInTree: (id: string, args: IFindType[]) => void;
-    insertInTree: (id: string, args: IFindType[]) => void;
     openKeys: (keys: string[]) => void;
     selectedkeys: (keys: string[]) => void;
 }
@@ -82,14 +79,14 @@ class Note extends React.Component<ICatalog, {
     public onSelect = ({ item, key, skeys }: any) => {
         const { getSelectedKeys, selectedkeys } = this.props;
         selectedkeys([key]);
+        getSelectedKeys([key]);
     }
 
 
     public del = (id: string, e: any) => {
         e.stopPropagation();
-        const { delInTree } = this.props;
         // e.preventDefault();
-        delInTree(id);
+        noteUtils.delNode(id);
     }
 
     public hideModal = (type: "ok" | "cancel") => {
@@ -118,28 +115,10 @@ class Note extends React.Component<ICatalog, {
     }
 
     // 插入文件或者文件夹
-    public insertFF = (item: INoteTree, e: any) => {
+    public insertFF = (fileType: "file-text" | "file-markdown" | "folder", item: INoteTree, e: any) => {
         e.stopPropagation();
-        const { insertInTree } = this.props;
         let temp = new Date().getTime() + "";
-        insertInTree(item.id, [
-            {
-                props: "id",
-                value: generator.createId(temp),
-            },
-            {
-                props: "title",
-                value: "新建文件夹",
-            },
-            {
-                props: "filetype",
-                value: "folder",
-            },
-            {
-                props: "nodes",
-                value: [],
-            },
-        ]);
+        noteUtils.createNode({ selectedid: item.id, createid: generator.createId(temp), type: fileType });
     }
 
     public render() {
@@ -148,8 +127,9 @@ class Note extends React.Component<ICatalog, {
         const content = (item: INoteTree) => {
             return (
                 <div className="noteTree-operation">
-                    <Icon type="folder-add" onClick={(e) => { this.insertFF(item, e); }} />
-                    <Icon type="file-add" onClick={(e) => { this.insertFF(item, e); }} />
+                    <Icon type="folder-add" onClick={(e) => { this.insertFF("folder", item, e); }} />
+                    <Icon type="file-add" onClick={(e) => { this.insertFF("file-text", item, e); }} />
+                    <Icon type="file-markdown" onClick={(e) => { this.insertFF("file-markdown", item, e); }} />
                     <Icon type="edit" onClick={(e) => { this.openModal(item, e); }} />
                     <Icon type="delete" onClick={(e) => { this.del(item.id, e); }} />
                 </div>
@@ -164,8 +144,6 @@ class Note extends React.Component<ICatalog, {
                         >
                             <Icon type={item.filetype} />
                             <span>{item.title}</span>
-                            <Icon className="del" type="delete"
-                                onClick={(e) => { this.del(item.id, e); }} />
                         </Menu.Item>
                     );
                 } else if (item.nodes) {
@@ -248,14 +226,8 @@ function mapDispatchToProps(dispatch: (p: any) => void) {
         getNoteList: () => {
             dispatch(getNoteList());
         },
-        delInTree: (id: string) => {
-            dispatch(delInTree(id));
-        },
         changeInTree: (id: string, args: IFindType[]) => {
             dispatch(changeInTree(id, args));
-        },
-        insertInTree: (id: string, args: IFindType[]) => {
-            dispatch(insertInTree(id, args));
         },
         openKeys: (keys: string[]) => {
             dispatch(openKeys(keys));

@@ -1,20 +1,55 @@
 import { store } from "@store/store";
 import { addFileInList } from "@views/note/redux";
-import { addInTree } from "@components/notecatalog/redux";
+import { insertInTree, IFindType, delInTree, selectedKeys } from "@components/notecatalog/redux";
+import { generator } from "@utils/generator";
 
 class NoteOperation {
     public createFile(opt: {
         id: string;
         pId: string;
-        filetype: "file-text" | "file-markdown" | "folder-open" | "folder";
+        filetype: "file-text" | "file-markdown";
     }) {
-        if (opt.filetype !== "folder-open" && opt.filetype !== "folder") {
-            store.dispatch(addFileInList(opt));
-        }
-        store.dispatch(addInTree(opt));
+        store.dispatch(addFileInList(opt));
     }
 
-    // public delFile() {
+    public createNode(opt: {
+        selectedid: string;
+        createid: string;
+        type: "file-text" | "file-markdown" | "folder";
+    }) {
+        const { selectedid, createid, type } = opt;
+        let nodeName: string = "新建文件";
+        switch (type) {
+            case "file-markdown":
+                nodeName = "新建markdown文件";
+                break;
+            case "folder":
+                nodeName = "新建文件夹";
+                break;
+            default:
+                break;
+        }
+        store.dispatch(insertInTree(selectedid, [
+            {
+                props: "id",
+                value: createid,
+            },
+            {
+                props: "filetype",
+                value: type,
+            },
+            {
+                props: "title",
+                value: nodeName,
+            },
+        ]));
+    }
 
-    // }
+    public delNode(key: string) {
+        store.dispatch(delInTree(key));
+        store.dispatch(selectedKeys([""]));
+    }
 }
+
+
+export const noteUtils = new NoteOperation();

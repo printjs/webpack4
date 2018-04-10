@@ -6,15 +6,14 @@ import { NoteTabsComponent } from "@components/notetabs";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
 import { addFileInList, IAddFileType } from "@views/note/redux";
-import { IAddInTreeType, addInTree, IcatalogStatusType, insertInTree, IFindType } from "@components/notecatalog/redux";
+import { IcatalogStatusType } from "@components/notecatalog/redux";
 import { generator } from "@utils/generator";
+import { noteUtils } from "@utils/note";
 
 
 interface INoteType {
     addFile: (opt: IAddFileType) => void;
-    addInTree: (opt: IAddInTreeType) => void;
     catalogStatus: IcatalogStatusType;
-    insertInTree: (id: string, args: IFindType[]) => void;
 }
 
 class Note extends React.Component<INoteType, {
@@ -38,65 +37,27 @@ class Note extends React.Component<INoteType, {
         });
     }
 
-    public addFolder = (type: "folder" = "folder") => {
-        let id = new Date().getTime() + "";
-        const { addInTree } = this.props;
-        addInTree({
-            id: id,
-            filetype: type,
-        });
-    }
-
-    public addFile = (type: "file-text" | "file-markdown") => {
-        console.log(type);
-        const { addFile, addInTree, catalogStatus } = this.props;
-        console.log(catalogStatus);
+    public createNode = (type: "file-text" | "file-markdown" | "folder") => {
+        const { catalogStatus } = this.props;
         let temp = new Date().getTime() + "";
-        addFile({
-            id: generator.createId(temp),
-            filetype: type,
-            pId: "1",
-        });
-        addInTree({
-            id: generator.createId(temp),
-            filetype: type,
-        });
-    }
 
-    public test = (type: "file-text" | "file-markdown" | "folder") => {
-        const { insertInTree, catalogStatus } = this.props;
-        let temp = new Date().getTime() + "";
         if (catalogStatus.selectedKeys.length === 0) {
-            insertInTree("", [
-                {
-                    props: "id",
-                    value: generator.createId(temp),
-                },
-                {
-                    props: "filetype",
-                    value: type,
-                },
-                {
-                    props: "title",
-                    value: "11111111",
-                },
-            ]);
+            noteUtils.createNode({ selectedid: "", createid: generator.createId(temp), type: type });
         } else {
-            insertInTree(catalogStatus.selectedKeys[0], [
-                {
-                    props: "id",
-                    value: generator.createId(temp),
-                },
-                {
-                    props: "filetype",
-                    value: type,
-                },
-                {
-                    props: "title",
-                    value: "11111111",
-                },
-            ]);
+            noteUtils.createNode({
+                selectedid: catalogStatus.selectedKeys[0], createid: generator.createId(temp), type: type,
+            });
         }
+
+        // addFile({
+        //     id: generator.createId(temp),
+        //     filetype: type,
+        //     pId: "1",
+        // });
+    }
+
+    public delNode = (e: any) => {
+        noteUtils.delNode(this.selectedkeys[0]);
     }
 
     public getSelectedKeys = (keys: string[]) => {
@@ -119,12 +80,13 @@ class Note extends React.Component<INoteType, {
                         </div>
                         <div className="box">
                             <Icon type="folder-add" title="添加文件夹"
-                                onClick={() => this.test("folder")} />
+                                onClick={() => this.createNode("folder")} />
                             <Icon type="file-add" title="添加笔记"
-                                onClick={() => this.test("file-text")} />
+                                onClick={() => this.createNode("file-text")} />
                             <Icon type="file-markdown" title="添加markdown笔记"
-                                onClick={() => this.test("file-markdown")} />
-                            <Icon type="delete" title="删除选中项" />
+                                onClick={() => this.createNode("file-markdown")} />
+                            <Icon type="delete" title="删除选中项"
+                                onClick={(e) => this.delNode(e)} />
                             <Icon type={shrink} onClick={this.shrink} />
                         </div>
                     </div>
@@ -151,12 +113,6 @@ function mapDispatchToProps(dispatch: (p: any) => void) {
     return {
         addFile: (opt: IAddFileType) => {
             dispatch(addFileInList(opt));
-        },
-        addInTree: (opt: IAddInTreeType) => {
-            dispatch(addInTree(opt));
-        },
-        insertInTree: (id: string, args: IFindType[]) => {
-            dispatch(insertInTree(id, args));
         },
     };
 }

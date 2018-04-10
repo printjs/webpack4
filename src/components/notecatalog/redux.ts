@@ -26,16 +26,6 @@ export function getNoteTree() {
     };
 }
 
-export interface IAddInTreeType {
-    id: string;
-    filetype: "file-text" | "file-markdown" | "folder-open" | "folder";
-}
-
-export function addInTree(opt: IAddInTreeType) {
-    return Object.assign({
-        type: ADDINTREE,
-    }, opt);
-}
 
 export function delInTree(key: string) {
     return {
@@ -129,6 +119,9 @@ export function handleNoteTree(state: INoteTree[] = initState, action: AnyAction
                             param[arg.props] = arg.value;
                         }
                         if (state[i].filetype.indexOf("folder") !== -1) {
+                            if (typeof state[i].nodes === "undefined") {
+                                state[i].nodes = [];
+                            }
                             state[i].nodes.push(param);
                         } else {
                             state.push(param);
