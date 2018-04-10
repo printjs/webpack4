@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/wjtGitHub/webpack4#readme",
   "devDependencies": {
-    "@types/hashids": "^1.0.30",
+    "@types/jssha": "0.0.29",
     "@types/node": "^9.4.7",
     "@types/react": "^16.0.40",
     "@types/react-dom": "^16.0.4",
@@ -59,8 +59,8 @@
   },
   "dependencies": {
     "antd": "^3.3.1",
-    "hashids": "^1.1.4",
     "history": "^4.7.2",
+    "jssha": "^2.3.1",
     "moment": "^2.22.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

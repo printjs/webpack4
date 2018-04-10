@@ -1,11 +1,13 @@
-import Hashids from "hashids";
+import jsSHA from "jssha";
+// import { jsSHA } from "jssha";
 
-const hashids = new Hashids("cherry", 16, "abcdefghijklmnopqrstuvwxyz");
 
 
 class Generator {
     public createId(str: string) {
-        return hashids.encodeHex(str);
+        const shaObj = new jsSHA("SHA-512", "TEXT");
+        shaObj.update(str);
+        return shaObj.getHash("HEX").substring(0, 16);
     }
 }
 
