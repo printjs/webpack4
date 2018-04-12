@@ -1,7 +1,7 @@
 import { store } from "@store/store";
-import { addFileInList } from "@views/note/redux";
-import { insertInTree, IFindType, delInTree, selectedKeys } from "@components/notecatalog/redux";
 import { generator } from "@utils/generator";
+import { addFileInList } from "@components/notecatalog/redux";
+
 
 class NoteOperation {
     public createFile(opt: {

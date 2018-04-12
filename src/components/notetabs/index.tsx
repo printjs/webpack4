@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Tabs, Button, Icon, Input } from "antd";
+const { TextArea } = Input;
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
 import { ITabType, updateTab, delTab, addTab } from "@components/notetabs/redux";
@@ -52,14 +53,6 @@ class NoteTabs extends React.Component<INoteTabType, {
         const { noteTabStore } = this.props;
         return (
             <div className="note-tabs">
-                <div className="note-tool">
-                    <div className="note-title">
-                        <Input placeholder="标题" size="small" />
-                    </div>
-                    <Icon type="eye" />
-                    <Icon type="tags" />
-                    <Icon type="link" />
-                </div>
                 <Tabs
                     hideAdd
                     onChange={this.onChange}
@@ -68,9 +61,23 @@ class NoteTabs extends React.Component<INoteTabType, {
                     onEdit={this.onEdit}
                 >
                     {noteTabStore.map((pane) =>
-                        <TabPane tab={pane.title} key={pane.key} closable={pane.closable === false ? false : true}>
-                            {pane.title}
-                        </TabPane>,
+                        <React.Fragment key={pane.key}>
+                            <TabPane
+                                className="WTF"
+                                tab={pane.title}
+                                key={pane.key}
+                                closable={pane.closable === false ? false : true}>
+                            </TabPane>
+                            <div className="TTT">
+                                <Input className="note-title" placeholder="标题"
+                                    style={{
+                                        borderWidth: "0",
+                                        boxShadow: "0 0 0 0 transparent",
+                                    }} />
+                                <TextArea autosize={true} defaultValue={JSON.stringify(pane)} />
+                            </div>
+
+                        </React.Fragment>,
                     )}
                 </Tabs>
             </div>

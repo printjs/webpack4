@@ -1,23 +1,24 @@
 .note-catalog
     border-right-width 0
-    .ant-menu-item
-        margin 0 !important 
-        height 30px !important
-        line-height 30px !important
-        >.del
-            display none  
-            margin-left 20px
-        &:hover
-            >.del
-                display inline-block
-    .ant-menu-submenu-title
-        margin 0
-        height 30px !important
-        line-height 30px !important 
-.noteTree-operation
-    display flex
-    >i 
-        margin-right 10px
-        cursor pointer
-.change-folder-name
-    width 300px !important
+    .ant-spin-nested-loading
+        >.ant-spin-container
+            >.ant-list-item
+                padding 8px
+                >.ant-list-item-meta
+                    >.ant-list-item-meta-content
+                        >.ant-list-item-meta-title
+                            overflow hidden
+                            text-overflow ellipsis
+                            white-space nowrap
+                            width 220px
+                            margin-bottom 6px
+                            >i 
+                                margin-right 5px
+                        >.ant-list-item-meta-description
+                            display -webkit-box
+                            /* autoprefixer: off */
+                            -webkit-box-orient vertical // 参考 https://github.com/postcss/autoprefixer/issues/776
+                            /* autoprefixer: on */
+                            -webkit-line-clamp 3
+                            overflow hidden
+
