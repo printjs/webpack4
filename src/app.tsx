@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Layout, Icon } from "antd";
 const { Header, Footer, Sider, Content } = Layout;
 import { HashRouter, Route } from "react-router-dom";
-import { NavComponent } from "@components/nav/nav";
+import { NavComponent } from "@components/nav/index";
 import { getEntryRoute } from "@route/entry.redux";
 import { IStore } from "@store/store";
 import { IRouteProps } from "./route";

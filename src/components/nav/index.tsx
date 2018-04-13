@@ -1,7 +1,7 @@
 import { Tabs, Icon } from "antd";
 import React from "react";
 const TabPane = Tabs.TabPane;
-import "./nav.styl";
+import "./style.styl";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
 import { IRouteProps, history } from "@route/index";

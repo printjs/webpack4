@@ -43,7 +43,7 @@ class Note extends React.Component<INoteType, {}> {
         return (
             <React.Fragment>
                 <div className="note-catalog-panel">
-                    <Input placeholder="all note" />
+                    <Input placeholder="all note" size="large"/>
                     <div className="tool-box">
                         <div className="title">
                             我的笔记
