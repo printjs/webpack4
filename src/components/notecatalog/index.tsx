@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Icon, Popover, Modal, Input, List, Checkbox } from "antd";
+import { Icon, Popover, Input, List, message, Popconfirm } from "antd";
 import { connect } from "react-redux";
 import "./style.styl";
 import { IStore } from "@store/store";
@@ -30,10 +30,10 @@ class Note extends React.Component<ICatalog, {}> {
         getNoteList();
     }
 
-    public handleClick = (e: any) => {
+    public handleClick = (e: any, key: string) => {
         const { noteList, addTab } = this.props;
         for (let i = 0, len = noteList.length; i < len; i++) {
-            if (noteList[i].id === e.key) {
+            if (noteList[i].id === key) {
                 addTab({
                     key: noteList[i].id,
                     title: noteList[i].title,
@@ -44,17 +44,10 @@ class Note extends React.Component<ICatalog, {}> {
     }
 
 
-
-
-    public del = (id: string, e: any) => {
+    public confirm(e: any) {
         e.stopPropagation();
-        // e.preventDefault();
+        message.success("Click on Yes");
     }
-
-    public test() {
-        console.log(1);
-    }
-
 
     public render() {
         const { noteList } = this.props;
@@ -69,10 +62,15 @@ class Note extends React.Component<ICatalog, {}> {
                         <List.Item
                             actions={[
                                 <Icon type="edit" />,
-                                <Icon type="eye-o" />,
-                                <Popover content={content} title="Title" trigger="click">
+                                <Icon type="eye-o" onClick={(e) => this.handleClick(e, item.id)} />,
+                                <Popconfirm
+                                    title="你确定删除这篇笔记吗?"
+                                    onConfirm={(e) => this.confirm(e)}
+                                    // onCancel={this.cancel}
+                                    okText="确定"
+                                    cancelText="取消">
                                     <Icon type="delete" />
-                                </Popover>,
+                                </Popconfirm>,
                                 <Popover content={content} title="Title" trigger="click">
                                     <Icon type="tag-o" />
                                 </Popover>,

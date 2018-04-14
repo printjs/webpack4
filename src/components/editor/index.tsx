@@ -1,7 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { Button } from "antd";
 import "./style.styl";
+import { EditorTool } from "@components/editor/_toolbar";
+import { markdown } from "@components/editor/_md/md";
 
 
 export class MDRichEditor extends React.Component<{}, {}> {
@@ -15,38 +16,32 @@ export class MDRichEditor extends React.Component<{}, {}> {
         this.dom = this.refs.editor;
     }
 
-    public formatDoc(e: any, sCmd: string, sValue?: string) {
-        e.stopPropagation();
-        e.preventDefault();
-        console.log(document.execCommand(sCmd, false, sValue));
-    }
-
     public listenKeyboard(e: any) {
         let keyCode = e.keyCode || e.which;
-        console.log(keyCode);
         if (keyCode === 9) {
             e.preventDefault();
-            document.execCommand("InsertHTML", false, "	");
+            document.execCommand("InsertHTML", false, "    ");
+        }
+    }
+
+    public watch = (watch: boolean) => {
+        if (watch) {
+            console.log(ReactDOM.findDOMNode(this.dom).innerHTML);
+            console.log(markdown.render(ReactDOM.findDOMNode(this.dom).innerText));
         }
     }
 
     public render() {
         return (
             <section className="md-rich-editor">
-                <div className="md-rich-operation-icon">
-                    <Button icon="bars" size="small"
-                        onClick={(e) => this.formatDoc(e, "insertorderedlist")} />
-                    <Button icon="bars" size="small"
-                        onClick={(e) => this.formatDoc(e, "insertunorderedlist")} />
-                    <Button icon="bars" size="small" />
-                </div>
-                <div
+                <EditorTool watch={this.watch} />
+                <pre
                     className="md-rich-work"
                     contentEditable={true}
                     suppressContentEditableWarning={true}
-                    onKeyUp={(e) => { e.preventDefault(); this.listenKeyboard(e) }}
+                    onKeyDown={(e) => { this.listenKeyboard(e); }}
                     ref="editor">
-                </div>
+                </pre>
             </section >
         );
     }
