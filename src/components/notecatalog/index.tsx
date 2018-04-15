@@ -3,9 +3,9 @@ import { Icon, Popover, Input, List, message, Popconfirm } from "antd";
 import { connect } from "react-redux";
 import "./style.styl";
 import { IStore } from "@store/store";
-import { addTab } from "@components/notetabs/redux";
 import { getNoteList, INoteType } from "@components/notecatalog/redux";
 import { generator } from "@utils/generator";
+import { addTab } from "@components/notepanel/_notetab/redux";
 /**
  * icon
  * file-text

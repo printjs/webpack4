@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/wjtGitHub/webpack4#readme",
   "devDependencies": {
+    "@types/classnames": "^2.2.3",
     "@types/highlight.js": "^9.12.2",
     "@types/jssha": "0.0.29",
     "@types/markdown-it": "0.0.4",
@@ -62,6 +63,8 @@
   },
   "dependencies": {
     "antd": "^3.3.1",
+    "classnames": "^2.2.5",
+    "github-markdown-css": "^2.10.0",
     "highlight.js": "^9.12.0",
     "history": "^4.7.2",
     "jssha": "^2.3.1",

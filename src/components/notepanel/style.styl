@@ -1,0 +1,37 @@
+@import "var.styl"
+
+.note-tabs
+    position absolute
+    left 0px
+    right 0px
+    top 0px
+    bottom 0px
+    display flex
+    flex-direction column
+    >.MD
+        padding 0 10px
+        display flex
+        flex-grow 1
+        flex-direction column
+        >.note-title-panel
+            display flex
+            align-items center
+            >.ant-radio-group 
+                display flex
+            >.ant-input
+                border-width 0
+                &:focus
+                    box-shadow 0 0 0 0 transparent
+        >.md-rich-editor
+            display flex
+            flex-direction column
+            flex-grow 1
+        >.EDITOR
+            position absolute
+            left 10px
+            right 10px
+            bottom 0px
+            top 77px
+            overflow auto
+            border-width 0
+            padding 6px 11px

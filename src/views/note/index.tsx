@@ -2,7 +2,7 @@ import * as React from "react";
 import "./style.styl";
 import { Input, Icon } from "antd";
 import { NoteCatalogComponent } from "@components/notecatalog";
-import { NoteTabsComponent } from "@components/notetabs";
+import { NotePanelComponent } from "@components/notepanel";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
 import { addFileInList, IAddFileType } from "@components/notecatalog/redux";
@@ -60,7 +60,7 @@ class Note extends React.Component<INoteType, {}> {
                     </div>
                 </div>
                 <div className="note-work-panel">
-                    <NoteTabsComponent />
+                    <NotePanelComponent />
                 </div>
             </React.Fragment>
         );

@@ -1,5 +1,7 @@
 import * as React from "react";
-import { Select, Button } from "antd";
+import { Select, Button, Radio, Icon } from "antd";
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 import * as ReactDOM from "react-dom";
 const { Option } = Select;
 import "./style.styl";
@@ -7,6 +9,7 @@ import "./style.styl";
 export class EditorTool extends React.Component<{
     watch: (watch: boolean) => void;
 }, {}> {
+    public isWatch: boolean = true;
     public formatDoc(sCmd: string, sValue?: string) {
         // e.stopPropagation();
         // e.preventDefault();
@@ -38,7 +41,8 @@ export class EditorTool extends React.Component<{
     }
 
 
-    public watch = () => {
+    public watch = (e: any) => {
+        console.log(e);
         const { watch } = this.props;
         watch(true);
     }
@@ -74,11 +78,14 @@ export class EditorTool extends React.Component<{
         };
         return (
             <div className="md-rich-operation-icon">
-                <Button
-                    icon="eye"
-                    size="small"
-                    className="watch" 
-                    onClick={this.watch}/>
+                <RadioGroup defaultValue={false} size="small" onChange={this.watch}>
+                    <RadioButton value={true}>
+                        <Icon type="eye" />
+                    </RadioButton>
+                    <RadioButton value={false}>
+                        <Icon type="edit" />
+                    </RadioButton>
+                </RadioGroup>
                 <Select
                     style={{ width: 80 }}
                     onChange={this.fontSize}
