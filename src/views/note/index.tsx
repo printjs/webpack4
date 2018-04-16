@@ -14,10 +14,15 @@ interface INoteType {
     addFile: (opt: IAddFileType) => void;
 }
 
-class Note extends React.Component<INoteType, {}> {
+class Note extends React.Component<INoteType, {
+    activeKey: string;
+}> {
+
     constructor(props: INoteType) {
         super(props);
-
+        this.state = {
+            activeKey: "welcome",
+        };
     }
 
 
@@ -35,15 +40,19 @@ class Note extends React.Component<INoteType, {}> {
         // noteUtils.delNode(this.selectedkeys[0]);
     }
 
-    // public del = () => {
+    public activeId = (id: string) => {
+        this.setState({
+            activeKey: id,
+        });
+    }
 
-    // }
 
     public render() {
+        const { activeKey } = this.state;
         return (
             <React.Fragment>
                 <div className="note-catalog-panel">
-                    <Input placeholder="all note" size="large"/>
+                    <Input placeholder="all note" size="large" />
                     <div className="tool-box">
                         <div className="title">
                             我的笔记

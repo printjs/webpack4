@@ -1,13 +1,13 @@
 import { createStore, combineReducers } from "redux";
 import { handleRoute, IRouteProps } from "@route/index";
 import { INoteType, handleNoteList } from "@components/notecatalog/redux";
-import { handleTab, ITabType } from "@components/notepanel/_notetab/redux";
+import { handleTab, ItabStateType } from "@components/notepanel/_notetab/redux";
 
 
 
 export interface IStore {
     handleRoute: IRouteProps[];
-    handleTab: ITabType[];
+    handleTab: ItabStateType;
     handleNoteList: INoteType[];
 }
 

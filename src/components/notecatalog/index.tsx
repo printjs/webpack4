@@ -5,7 +5,7 @@ import "./style.styl";
 import { IStore } from "@store/store";
 import { getNoteList, INoteType } from "@components/notecatalog/redux";
 import { generator } from "@utils/generator";
-import { addTab } from "@components/notepanel/_notetab/redux";
+import { addTab, defaultTab } from "@components/notepanel/_notetab/redux";
 /**
  * icon
  * file-text
@@ -21,6 +21,7 @@ interface ICatalog {
     noteList: INoteType[];
     addTab: ({ }) => void;
     getNoteList: () => void;
+    defaultTab: (key: string) => void;
 }
 
 class Note extends React.Component<ICatalog, {}> {
@@ -31,13 +32,14 @@ class Note extends React.Component<ICatalog, {}> {
     }
 
     public handleClick = (e: any, key: string) => {
-        const { noteList, addTab } = this.props;
+        const { noteList, addTab, defaultTab } = this.props;
         for (let i = 0, len = noteList.length; i < len; i++) {
             if (noteList[i].id === key) {
                 addTab({
                     key: noteList[i].id,
                     title: noteList[i].title,
                 });
+                defaultTab(noteList[i].id);
                 return;
             }
         }
@@ -61,8 +63,7 @@ class Note extends React.Component<ICatalog, {}> {
                     renderItem={(item: INoteType) => (
                         <List.Item
                             actions={[
-                                <Icon type="edit" />,
-                                <Icon type="eye-o" onClick={(e) => this.handleClick(e, item.id)} />,
+                                <Icon type="profile" onClick={(e) => this.handleClick(e, item.id)} />,
                                 <Popconfirm
                                     title="你确定删除这篇笔记吗?"
                                     onConfirm={(e) => this.confirm(e)}
@@ -119,8 +120,13 @@ function mapDispatchToProps(dispatch: (p: any) => void) {
         getNoteList: () => {
             dispatch(getNoteList());
         },
+        defaultTab: (key: string) => {
+            dispatch(defaultTab(key));
+        },
     };
 }
+
+
 
 
 

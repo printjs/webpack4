@@ -2,7 +2,7 @@ import * as React from "react";
 import { Tabs, Icon } from "antd";
 const { TabPane } = Tabs;
 import { IStore } from "@store/store";
-import { ITabType, updateTab, delTab, addTab } from "@components/notepanel/_notetab/redux";
+import { ItabStateType, updateTab, delTab, addTab, ITabType, defaultTab } from "@components/notepanel/_notetab/redux";
 import { connect } from "react-redux";
 import { isString } from "util";
 import "./style.styl";
@@ -10,22 +10,18 @@ import "./style.styl";
 
 
 interface INoteTabsType {
-    noteTabStore: ITabType[];
+    noteTabStore: ItabStateType;
     updateTab: (opt: ITabType) => void;
     delTab: (opt: string) => void;
     addTab: (opt: ITabType) => void;
+    defaultTab: (key: string) => void;
 }
 
 
-class NoteTabs extends React.Component<INoteTabsType, {
-    activeKey: string;
-}> {
+class NoteTabs extends React.Component<INoteTabsType, {}> {
     constructor(props: INoteTabsType) {
         super(props);
         const { addTab } = this.props;
-        this.state = {
-            activeKey: "welcome",
-        };
         addTab({
             key: "welcome",
             title: "欢迎页",
@@ -33,7 +29,8 @@ class NoteTabs extends React.Component<INoteTabsType, {
     }
 
     public onChange = (activeKey: string) => {
-        this.setState({ activeKey });
+        const { defaultTab } = this.props;
+        defaultTab(activeKey);
     }
 
 
@@ -51,24 +48,24 @@ class NoteTabs extends React.Component<INoteTabsType, {
 
     public render() {
         const { noteTabStore } = this.props;
+        const { tabs, defaultKey } = noteTabStore;
         return (
             <Tabs
-                defaultActiveKey="1"
+                activeKey={defaultKey}
                 size="small"
                 onChange={this.onChange}
                 className="ant-tab-component">
-                {noteTabStore.map((pane, $index) => {
+                {tabs.map((pane, $index) => {
                     return (
                         <TabPane tab={
                             <React.Fragment>
                                 <span title={pane.title} style={{ marginRight: "5px" }}>{pane.title}</span>
-                                <Icon type="close" />
+                                <Icon type="close" style={{ display: pane.closedisable ? "none" : "inline" }} />
                             </React.Fragment>
                         } key={pane.key}>
                         </TabPane>
                     );
                 })}
-
                 <TabPane tab="Tab 2" key="2"></TabPane>
                 <TabPane tab="Tab 3" key="31"></TabPane>
                 <TabPane tab="Tab 3" key="32"></TabPane>
@@ -115,8 +112,13 @@ function mapDispatchToProps(dispatch: (p: any) => void) {
         addTab: (opt: ITabType) => {
             dispatch(addTab(opt));
         },
+        defaultTab: (key: string) => {
+            dispatch(defaultTab(key));
+        },
     };
 }
+
+
 
 
 export const NoteTabsComponent = connect(mapStateToProps, mapDispatchToProps)(NoteTabs);

@@ -5,17 +5,23 @@ const RadioGroup = Radio.Group;
 import * as ReactDOM from "react-dom";
 const { Option } = Select;
 import "./style.styl";
+import { connect } from "react-redux";
+import { IStore } from "@store/store";
+import { updateNoteInList, IchangeType } from "@components/notecatalog/redux";
 
-export class EditorTool extends React.Component<{
-    watch: (watch: boolean) => void;
-}, {}> {
-    public isWatch: boolean = true;
+
+interface IEditorToolType {
+    watch: (status: "r" | "w") => void;
+    status: string;
+    defaultKey: string;
+    updateNoteInList: (id: string, item: IchangeType[]) => void;
+}
+
+export class EditorTool extends React.Component<IEditorToolType, {}> {
     public formatDoc(sCmd: string, sValue?: string) {
         // e.stopPropagation();
         // e.preventDefault();
         console.log(document.execCommand(sCmd, false, sValue));
-
-
         // document.execCommand(
         //     "insertImage",
         //     false,
@@ -42,9 +48,14 @@ export class EditorTool extends React.Component<{
 
 
     public watch = (e: any) => {
-        console.log(e);
-        const { watch } = this.props;
-        watch(true);
+        const { updateNoteInList, defaultKey, watch } = this.props;
+        updateNoteInList(defaultKey, [
+            {
+                value: e.target.value,
+                props: "status",
+            },
+        ]);
+        watch(e.target.value);
     }
     // formatblock h6 pre p 字体
     // fontname Arial Black 字体
@@ -66,6 +77,7 @@ export class EditorTool extends React.Component<{
     // indent undefined 增加缩进
     // outdent undefined 删除缩进
     public render() {
+        const { status } = this.props;
         const fontSize = () => {
             let fontSize = [];
             for (let i = 1; i <= 7; i++) {
@@ -78,11 +90,11 @@ export class EditorTool extends React.Component<{
         };
         return (
             <div className="md-rich-operation-icon">
-                <RadioGroup defaultValue={false} size="small" onChange={this.watch}>
-                    <RadioButton value={true}>
+                <RadioGroup defaultValue={status} size="small" onChange={this.watch}>
+                    <RadioButton value="r">
                         <Icon type="eye" />
                     </RadioButton>
-                    <RadioButton value={false}>
+                    <RadioButton value="w">
                         <Icon type="edit" />
                     </RadioButton>
                 </RadioGroup>
@@ -174,3 +186,32 @@ export class EditorTool extends React.Component<{
         );
     }
 }
+
+
+function mapStateToProps(state: IStore, props: {
+    watch: (status: "r" | "w") => void;
+}) {
+    const { handleTab, handleNoteList } = state;
+    const { defaultKey } = handleTab;
+    let status: string = "r";
+    for (let i = 0, len = handleNoteList.length; i < len; i++) {
+        if (handleNoteList[i].id === defaultKey) {
+            status = handleNoteList[i].status;
+            break;
+        }
+    }
+    return {
+        defaultKey: defaultKey,
+        status: status,
+    };
+}
+
+function mapDispatchToProps(dispatch: (p: any) => void) {
+    return {
+        updateNoteInList: (id: string, item: IchangeType[]) => {
+            dispatch(updateNoteInList(id, item));
+        },
+    };
+}
+
+export const EditorToolComponent = connect(mapStateToProps, mapDispatchToProps)(EditorTool);
