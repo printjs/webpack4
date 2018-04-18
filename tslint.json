@@ -30,6 +30,7 @@
         "no-shadowed-variable": false,
         "object-literal-shorthand": false,
         "member-access": true,
+        "object-literal-key-quotes": false,
         "array-type": [
             true,
             "array-simple"

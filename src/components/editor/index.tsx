@@ -1,5 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { Input } from "antd";
+const { TextArea } = Input;
 import "./style.styl";
 import { EditorTool } from "@components/editor/_toolbar";
 import { markdown } from "@components/editor/_md/md";
@@ -8,6 +10,7 @@ import "github-markdown-css";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
 import { INoteType, updateNoteInList, IchangeType } from "@components/notecatalog/redux";
+import { QuillEditor } from "@components/quill";
 
 
 
@@ -85,9 +88,14 @@ export class MDRichEditor extends React.Component<IeditorType, {}> {
         });
         return (
             <section className="md-rich-editor">
-                <EditorTool watch={this.watch} status={status} />
-                <div className="editor-panel">
-                    <pre
+                {/* <EditorTool watch={this.watch} status={status} /> */}
+                                    {/* <TextArea
+                        className={editClass}
+                        onKeyDown={(e) => { this.listenKeyboard(e); }}
+                        onKeyUp={(e) => { this.changeContext(e); }}
+                        ref="editor">
+                    </TextArea> */}
+                                        {/* <pre
                         className={editClass}
                         contentEditable={status === "w"}
                         suppressContentEditableWarning={status === "w"}
@@ -95,7 +103,9 @@ export class MDRichEditor extends React.Component<IeditorType, {}> {
                         onKeyUp={(e) => { this.changeContext(e); }}
                         ref="editor"
                         dangerouslySetInnerHTML={{ __html: this.handleContext("r", context) }}>
-                    </pre>
+                    </pre> */}
+                <div className="editor-panel">
+                    <QuillEditor />
                 </div>
             </section>
         );

@@ -109,8 +109,6 @@ const initNote: INoteStoreType = {
 };
 
 export function handleNote(state: INoteStoreType = initNote, action: AnyAction) {
-    let len = state.noteList.length;
-    let temp!: INoteType;
     switch (action.type) {
         case GETNOTELIST:
             return state;
@@ -136,24 +134,11 @@ export function handleNote(state: INoteStoreType = initNote, action: AnyAction) 
                 ],
             };
         case DELNOTEINLIST:
-            for (let i = 0; i < len; i++) {
-                if (state.noteList[i].id === action.id) {
-                    state.noteList.splice(i, 1);
+            let temp = state.noteList.slice(0);
+            for (let i = 0; i < temp.length; i++) {
+                if (temp[i].id === action.id) {
+                    temp.splice(i, 1);
                     break;
-                }
-            }
-            break;
-        case UPDATENOTEINLIST:
-            for (let i = 0; i < len; i++) {
-                let source = state.noteList[i];
-                if (source.id === action.id) {
-                    for (let j = 0, jlen = action.item.length; j < jlen; j++) {
-                        let param = action.item[j];
-                        if (isIchangeType(param)) {
-                            source[param.props] = param.value;
-                        }
-                    }
-                    source.updatetime = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
                 }
             }
             return {
@@ -161,19 +146,46 @@ export function handleNote(state: INoteStoreType = initNote, action: AnyAction) 
                     ...state.note,
                 },
                 noteList: [
-                    ...state.noteList,
+                    ...temp,
+                ],
+            };
+        case UPDATENOTEINLIST:
+            let tempNote!: INoteType;
+            let temp2 = state.noteList.map((item, $index) => {
+                if (item.id === action.id) {
+                    for (let j = 0, jlen = action.item.length; j < jlen; j++) {
+                        let param = action.item[j];
+                        if (isIchangeType(param)) {
+                            item[param.props] = param.value;
+                        }
+                    }
+                }
+                item.updatetime = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+                tempNote = item;
+                return item;
+            });
+            console.log(tempNote);
+            console.log("=====");
+            console.log(temp2);
+            return {
+                note: {
+                    ...tempNote,
+                },
+                noteList: [
+                    ...temp2,
                 ],
             };
         case FINDNOTEBYID:
-            for (let i = 0; i < len; i++) {
-                let source = newNoteList[i];
+            let temp3!: INoteType;
+            for (let i = 0, len = state.noteList.length; i < len; i++) {
+                let source = state.noteList[i];
                 if (source.id === action.id) {
-                    target = source;
+                    temp3 = Object.assign({}, source);
                 }
             }
             return {
                 note: {
-                    ...state.note,
+                    ...temp3,
                 },
                 noteList: [
                     ...state.noteList,
