@@ -5,7 +5,7 @@ export const GETNOTELIST = "获取所有笔记的列表";
 export const ADDNOTEINLIST = "在笔记列表中添加文件";
 export const DELNOTEINLIST = "删除笔记列表中的文件";
 export const UPDATENOTEINLIST = "更新笔记列表";
-export const FINDNOTEBYKEY = "通过key来查找笔记";
+export const FINDNOTEBYID = "通过id来查找笔记";
 
 export interface INoteType {
     title: string;
@@ -27,13 +27,13 @@ export function getNoteList() {
 }
 
 
-export interface IAddFileType {
+export interface IAddNoteType {
     id: string;
     pId: string;
     filetype: "file-text" | "file-markdown";
 }
 
-export function addFileInList(opt: IAddFileType) {
+export function addNoteInList(opt: IAddNoteType) {
     return Object.assign({
         type: ADDNOTEINLIST,
     }, opt);
@@ -59,11 +59,18 @@ export function updateNoteInList(key: string, opt: IchangeType[]) {
 }
 
 
+export function findNoteById(id: string) {
+    return {
+        type: FINDNOTEBYID,
+        id: id,
+    };
+}
 
-const notelist: INoteType[] = [
+
+const noteList: INoteType[] = [
     {
         title: "file1111111111111111111111111111111111111111111111111111111111111111111111",
-        id: "fdgjlkdfjglksdjfasjdlf",
+        id: "111111111111111111111111111111111111111111111111",
         filetype: "file-text",
         context: `We supply a series of design principles,
          practical patterns and high quality design resources
@@ -81,8 +88,20 @@ function isIchangeType(x: any): x is IchangeType {
     return typeof x !== "undefined";
 }
 
-export function handleNoteList(state: INoteType[] = notelist, action: AnyAction) {
-    let len = state.length;
+export interface INoteStoreType {
+    noteList: INoteType[];
+    targetNote: INoteType;
+}
+
+const initNote = {
+    noteList: noteList,
+    targetNote: noteList[0],
+};
+
+export function handleNoteList(state: INoteStoreType = initNote, action: AnyAction) {
+    let len = state.noteList.length;
+    let target: INoteType = noteList[0];
+    let newNoteList = state.noteList.slice(0);
     switch (action.type) {
         case GETNOTELIST:
             break;
@@ -98,19 +117,19 @@ export function handleNoteList(state: INoteType[] = notelist, action: AnyAction)
                 parentId: action.pId,
                 top: false,
             };
-            state.push(params);
+            newNoteList.push(params);
             break;
         case DELNOTEINLIST:
             for (let i = 0; i < len; i++) {
-                if (state[i].id === action.id) {
-                    state.splice(i, 1);
+                if (newNoteList[i].id === action.id) {
+                    newNoteList.splice(i, 1);
                     break;
                 }
             }
             break;
         case UPDATENOTEINLIST:
             for (let i = 0; i < len; i++) {
-                let source = state[i];
+                let source = newNoteList[i];
                 if (source.id === action.id) {
                     for (let j = 0, jlen = action.item.length; j < jlen; j++) {
                         let param = action.item[j];
@@ -119,10 +138,25 @@ export function handleNoteList(state: INoteType[] = notelist, action: AnyAction)
                         }
                     }
                     source.updatetime = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+                    target = source;
                 }
             }
+            break;
+        case FINDNOTEBYID:
+            for (let i = 0; i < len; i++) {
+                let source = newNoteList[i];
+                if (source.id === action.id) {
+                    target = source;
+                }
+            }
+            break;
         default:
             break;
     }
-    return state.slice(0);
+    return {
+        noteList: newNoteList,
+        targetNote: {
+            ...target,
+        },
+    };
 }

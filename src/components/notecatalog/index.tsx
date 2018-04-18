@@ -5,7 +5,7 @@ import "./style.styl";
 import { IStore } from "@store/store";
 import { getNoteList, INoteType } from "@components/notecatalog/redux";
 import { generator } from "@utils/generator";
-import { addTab, defaultTab } from "@components/notepanel/_notetab/redux";
+import { addTab, defaultTab } from "@views/note/_notepanel/_notetab/redux";
 /**
  * icon
  * file-text
@@ -22,6 +22,7 @@ interface ICatalog {
     addTab: ({ }) => void;
     getNoteList: () => void;
     defaultTab: (key: string) => void;
+    activeId: (id: string) => void;
 }
 
 class Note extends React.Component<ICatalog, {}> {
@@ -32,7 +33,7 @@ class Note extends React.Component<ICatalog, {}> {
     }
 
     public handleClick = (e: any, key: string) => {
-        const { noteList, addTab, defaultTab } = this.props;
+        const { noteList, addTab, defaultTab, activeId } = this.props;
         for (let i = 0, len = noteList.length; i < len; i++) {
             if (noteList[i].id === key) {
                 addTab({
@@ -40,6 +41,7 @@ class Note extends React.Component<ICatalog, {}> {
                     title: noteList[i].title,
                 });
                 defaultTab(noteList[i].id);
+                activeId(noteList[i].id);
                 return;
             }
         }
@@ -85,7 +87,7 @@ class Note extends React.Component<ICatalog, {}> {
                                         <i>{item.title}</i>
                                     </React.Fragment>
                                 }
-                                description={<i>{item.context}</i>}
+                                description={<div dangerouslySetInnerHTML={{ __html: item.context }}></div>}
                             />
                         </List.Item>
                     )}
@@ -103,8 +105,10 @@ const content = (
 );
 
 function mapStateToProps(state: IStore) {
+    const { handleNoteList } = state;
+    const { noteList } = handleNoteList;
     return {
-        noteList: state.handleNoteList,
+        noteList: noteList,
     };
 }
 

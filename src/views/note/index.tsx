@@ -2,27 +2,28 @@ import * as React from "react";
 import "./style.styl";
 import { Input, Icon } from "antd";
 import { NoteCatalogComponent } from "@components/notecatalog";
-import { NotePanelComponent } from "@components/notepanel";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
-import { addFileInList, IAddFileType } from "@components/notecatalog/redux";
+import { addNoteInList, IAddNoteType, findNoteById, IchangeType, updateNoteInList, INoteType } from "@components/notecatalog/redux";
 import { generator } from "@utils/generator";
+import { NotePanel } from "@views/note/_notepanel";
+import { ITabType, updateTab } from "@views/note/_notepanel/_notetab/redux";
 
 
 
-interface INoteType {
-    addFile: (opt: IAddFileType) => void;
+
+interface INoteContainerType {
+    addFile: (opt: IAddNoteType) => void;
+    findNoteById: (id: string) => void;
+    noteDetail: INoteType;
+    updateNoteInList: (id: string, item: IchangeType[]) => void;
+    updateTab: (opt: ITabType) => void;
 }
 
-class Note extends React.Component<INoteType, {
-    activeKey: string;
-}> {
+class Note extends React.Component<INoteContainerType, {}> {
 
-    constructor(props: INoteType) {
+    constructor(props: INoteContainerType) {
         super(props);
-        this.state = {
-            activeKey: "welcome",
-        };
     }
 
 
@@ -41,14 +42,13 @@ class Note extends React.Component<INoteType, {
     }
 
     public activeId = (id: string) => {
-        this.setState({
-            activeKey: id,
-        });
+        const { findNoteById } = this.props;
+        findNoteById(id);
     }
 
 
     public render() {
-        const { activeKey } = this.state;
+        const { noteDetail, updateNoteInList, updateTab } = this.props;
         return (
             <React.Fragment>
                 <div className="note-catalog-panel">
@@ -65,11 +65,14 @@ class Note extends React.Component<INoteType, {
                         </div>
                     </div>
                     <div className="note-tool-panel">
-                        <NoteCatalogComponent />
+                        <NoteCatalogComponent activeId={this.activeId} />
                     </div>
                 </div>
                 <div className="note-work-panel">
-                    <NotePanelComponent />
+                    <NotePanel
+                        noteDetail={noteDetail}
+                        updateNoteInList={updateNoteInList}
+                        updateTab={updateTab} />
                 </div>
             </React.Fragment>
         );
@@ -78,18 +81,33 @@ class Note extends React.Component<INoteType, {
 
 
 function mapStateToProps(state: IStore) {
+    const { handleNoteList } = state;
+    const { targetNote } = handleNoteList;
+    console.log(targetNote);
     return {
+        noteDetail: {
+            ...targetNote,
+        },
     };
 }
 
 function mapDispatchToProps(dispatch: (p: any) => void) {
     return {
-        addFile: (opt: IAddFileType) => {
-            dispatch(addFileInList(opt));
+        addFile: (opt: IAddNoteType) => {
+            dispatch(addNoteInList(opt));
+        },
+        findNoteById: (id: string) => {
+            dispatch(findNoteById(id));
+        },
+        updateNoteInList: (id: string, item: IchangeType[]) => {
+            dispatch(updateNoteInList(id, item));
+        },
+        updateTab: (opt: ITabType) => {
+            dispatch(updateTab(opt));
         },
     };
 }
 
 
-export const NoteComponent = connect(null, mapDispatchToProps)(Note);
+export const NoteComponent = connect(mapStateToProps, mapDispatchToProps)(Note);
 

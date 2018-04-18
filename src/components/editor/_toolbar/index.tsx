@@ -13,14 +13,10 @@ import { updateNoteInList, IchangeType } from "@components/notecatalog/redux";
 interface IEditorToolType {
     watch: (status: "r" | "w") => void;
     status: string;
-    defaultKey: string;
-    updateNoteInList: (id: string, item: IchangeType[]) => void;
 }
 
 export class EditorTool extends React.Component<IEditorToolType, {}> {
     public formatDoc(sCmd: string, sValue?: string) {
-        // e.stopPropagation();
-        // e.preventDefault();
         console.log(document.execCommand(sCmd, false, sValue));
         // document.execCommand(
         //     "insertImage",
@@ -48,13 +44,7 @@ export class EditorTool extends React.Component<IEditorToolType, {}> {
 
 
     public watch = (e: any) => {
-        const { updateNoteInList, defaultKey, watch } = this.props;
-        updateNoteInList(defaultKey, [
-            {
-                value: e.target.value,
-                props: "status",
-            },
-        ]);
+        const { watch } = this.props;
         watch(e.target.value);
     }
     // formatblock h6 pre p 字体
@@ -90,7 +80,7 @@ export class EditorTool extends React.Component<IEditorToolType, {}> {
         };
         return (
             <div className="md-rich-operation-icon">
-                <RadioGroup defaultValue={status} size="small" onChange={this.watch}>
+                <RadioGroup value={status} size="small" onChange={this.watch}>
                     <RadioButton value="r">
                         <Icon type="eye" />
                     </RadioButton>
@@ -186,32 +176,3 @@ export class EditorTool extends React.Component<IEditorToolType, {}> {
         );
     }
 }
-
-
-function mapStateToProps(state: IStore, props: {
-    watch: (status: "r" | "w") => void;
-}) {
-    const { handleTab, handleNoteList } = state;
-    const { defaultKey } = handleTab;
-    let status: string = "r";
-    for (let i = 0, len = handleNoteList.length; i < len; i++) {
-        if (handleNoteList[i].id === defaultKey) {
-            status = handleNoteList[i].status;
-            break;
-        }
-    }
-    return {
-        defaultKey: defaultKey,
-        status: status,
-    };
-}
-
-function mapDispatchToProps(dispatch: (p: any) => void) {
-    return {
-        updateNoteInList: (id: string, item: IchangeType[]) => {
-            dispatch(updateNoteInList(id, item));
-        },
-    };
-}
-
-export const EditorToolComponent = connect(mapStateToProps, mapDispatchToProps)(EditorTool);

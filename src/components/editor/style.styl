@@ -1,18 +1,21 @@
 .md-rich-editor
-    position relative
-    >.md-rich-work
-        position absolute
-        left 0px
-        right 0px
-        bottom 40px
-        top 40px
-        overflow auto
-        white-space: pre-wrap;
-        -o-tab-size: 4;
-        -moz-tab-size: 4;
-        tab-size: 4;
-        &:focus
-            box-shadow 0 0 0 0 transparent
-            outline none !important 
+    >.editor-panel
+        position relative
+        display flex
+        flex-grow 1
+        >.message
+            position absolute
+            left 0px
+            right 0px
+            bottom 0px
+            top 0px
+            overflow auto
+            white-space: pre-wrap;
+            -o-tab-size: 4;
+            -moz-tab-size: 4;
+            tab-size: 4;
+            &:focus
+                box-shadow 0 0 0 0 transparent
+                outline none !important 
     >.editor-btn
         height 40px
