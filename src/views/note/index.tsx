@@ -81,12 +81,12 @@ class Note extends React.Component<INoteContainerType, {}> {
 
 
 function mapStateToProps(state: IStore) {
-    const { handleNoteList } = state;
-    const { targetNote } = handleNoteList;
-    console.log(targetNote);
+    const { handleNote } = state;
+    const { note } = handleNote;
+    console.log(note);
     return {
         noteDetail: {
-            ...targetNote,
+            ...note,
         },
     };
 }

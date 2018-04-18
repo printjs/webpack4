@@ -105,8 +105,8 @@ const content = (
 );
 
 function mapStateToProps(state: IStore) {
-    const { handleNoteList } = state;
-    const { noteList } = handleNoteList;
+    const { handleNote } = state;
+    const { noteList } = handleNote;
     return {
         noteList: noteList,
     };

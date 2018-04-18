@@ -73,12 +73,12 @@ export class NotePanel extends React.Component<INotePanelType, {}> {
 
 
 // function mapStateToProps(state: IStore) {
-//     const { handleTab, handleNoteList } = state;
+//     const { handleTab, handleNote } = state;
 //     const { defaultKey } = handleTab;
-//     const { targetNote } = handleNoteList;
+//     const { note } = handleNote;
 //     return {
 //         noteDetail: {
-//             ...targetNote,
+//             ...note,
 //         },
 //         defaultKey,
 //     };

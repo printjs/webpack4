@@ -90,21 +90,30 @@ function isIchangeType(x: any): x is IchangeType {
 
 export interface INoteStoreType {
     noteList: INoteType[];
-    targetNote: INoteType;
+    note: INoteType;
 }
 
-const initNote = {
-    noteList: noteList,
-    targetNote: noteList[0],
+const initNote: INoteStoreType = {
+    noteList: [],
+    note: {
+        title: "init",
+        id: "init",
+        filetype: "file-text",
+        context: `the init file`,
+        status: "r",
+        updatetime: "init",
+        createtime: "init",
+        parentId: "",
+        top: false,
+    },
 };
 
-export function handleNoteList(state: INoteStoreType = initNote, action: AnyAction) {
+export function handleNote(state: INoteStoreType = initNote, action: AnyAction) {
     let len = state.noteList.length;
-    let target: INoteType = noteList[0];
-    let newNoteList = state.noteList.slice(0);
+    let temp!: INoteType;
     switch (action.type) {
         case GETNOTELIST:
-            break;
+            return state;
         case ADDNOTEINLIST:
             let params: INoteType = {
                 title: action.filetype === "file-text" ? "新建文件" : "新建markdown文件",
@@ -117,19 +126,26 @@ export function handleNoteList(state: INoteStoreType = initNote, action: AnyActi
                 parentId: action.pId,
                 top: false,
             };
-            newNoteList.push(params);
-            break;
+            return {
+                note: {
+                    ...state.note,
+                },
+                noteList: [
+                    ...state.noteList,
+                    params,
+                ],
+            };
         case DELNOTEINLIST:
             for (let i = 0; i < len; i++) {
-                if (newNoteList[i].id === action.id) {
-                    newNoteList.splice(i, 1);
+                if (state.noteList[i].id === action.id) {
+                    state.noteList.splice(i, 1);
                     break;
                 }
             }
             break;
         case UPDATENOTEINLIST:
             for (let i = 0; i < len; i++) {
-                let source = newNoteList[i];
+                let source = state.noteList[i];
                 if (source.id === action.id) {
                     for (let j = 0, jlen = action.item.length; j < jlen; j++) {
                         let param = action.item[j];
@@ -138,10 +154,16 @@ export function handleNoteList(state: INoteStoreType = initNote, action: AnyActi
                         }
                     }
                     source.updatetime = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-                    target = source;
                 }
             }
-            break;
+            return {
+                note: {
+                    ...state.note,
+                },
+                noteList: [
+                    ...state.noteList,
+                ],
+            };
         case FINDNOTEBYID:
             for (let i = 0; i < len; i++) {
                 let source = newNoteList[i];
@@ -149,14 +171,15 @@ export function handleNoteList(state: INoteStoreType = initNote, action: AnyActi
                     target = source;
                 }
             }
-            break;
+            return {
+                note: {
+                    ...state.note,
+                },
+                noteList: [
+                    ...state.noteList,
+                ],
+            };
         default:
-            break;
+            return state;
     }
-    return {
-        noteList: newNoteList,
-        targetNote: {
-            ...target,
-        },
-    };
 }
