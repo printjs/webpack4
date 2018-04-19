@@ -95,6 +95,7 @@ class Note extends React.Component<INoteContainerType, {}> {
                             noteList={noteList}
                             addTab={addTab}
                             defaultTab={defaultTab}
+                            updateNoteInList={updateNoteInList}
                         />
                     </div>
                 </div>

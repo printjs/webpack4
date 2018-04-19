@@ -48,7 +48,7 @@ export function delNoteInList(key: string) {
 
 export interface IchangeType {
     value: any;
-    props: "title" | "context" | "status" | "parentId";
+    props: "title" | "context" | "status" | "parentId" | "top";
 }
 export function updateNoteInList(key: string, opt: IchangeType[]) {
     return {

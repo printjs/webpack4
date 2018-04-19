@@ -5,7 +5,8 @@ import "./style.styl";
 import { IStore } from "@store/store";
 import { generator } from "@utils/generator";
 import { addTab, defaultTab } from "@views/note/_notepanel/_notetab/redux";
-import { getNoteList, INoteType } from "@views/note/_catalog/redux";
+import { getNoteList, INoteType, IchangeType } from "@views/note/_catalog/redux";
+import { markdown } from "@utils/md";
 /**
  * icon
  * file-text
@@ -25,6 +26,7 @@ interface ICatalog {
     }) => void;
     defaultTab: (key: string) => void;
     findNoteById: (id: string) => void;
+    updateNoteInList: (id: string, item: IchangeType[]) => void;
 }
 
 export class NoteCatalog extends React.Component<ICatalog, {}> {
@@ -51,6 +53,23 @@ export class NoteCatalog extends React.Component<ICatalog, {}> {
     public confirm(e: any) {
         e.stopPropagation();
         message.success("Click on Yes");
+    }
+
+    public renderText(str: string, fileType: "file-text" | "file-markdown") {
+        if (fileType === "file-markdown") {
+            return markdown.render(str);
+        } else {
+            return str;
+        }
+    }
+
+    public top(id: string, top: boolean, e: any) {
+        e.stopPropagation();
+        const { updateNoteInList } = this.props;
+        updateNoteInList(id, [{
+            value: !top,
+            props: "top",
+        }]);
     }
 
     public render() {
@@ -82,12 +101,24 @@ export class NoteCatalog extends React.Component<ICatalog, {}> {
                             <List.Item.Meta
                                 title={
                                     <React.Fragment>
-                                        <Icon type="pushpin-o" />
+                                        <Icon
+                                            type="pushpin-o"
+                                            style={{
+                                                cursor: "pointer",
+                                                color: item.top ? "#096dd9" : "ccc",
+                                            }}
+                                            onClick={(e) => this.top(item.id, item.top, e)}
+                                        />
                                         <Icon type={item.filetype} />
                                         <i>{item.title}</i>
                                     </React.Fragment>
                                 }
-                                description={<div dangerouslySetInnerHTML={{ __html: item.context }}></div>}
+                                description={
+                                    <div dangerouslySetInnerHTML={{
+                                        __html: this.renderText(item.context, item.filetype),
+                                    }}>
+                                    </div>
+                                }
                             />
                         </List.Item>
                     )}
