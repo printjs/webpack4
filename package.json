@@ -35,6 +35,7 @@
     "@types/react-dom": "^16.0.4",
     "@types/react-redux": "^5.0.15",
     "@types/react-router-dom": "^4.2.5",
+    "@types/simplemde": "^1.11.7",
     "@types/webpack": "^4.1.0",
     "autoprefixer": "^8.1.0",
     "babel-loader": "^7.1.4",
@@ -77,6 +78,7 @@
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "simplemde": "^1.11.2"
   }
 }

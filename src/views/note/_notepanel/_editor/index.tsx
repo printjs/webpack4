@@ -11,6 +11,7 @@ import { markdown } from "@utils/md";
 import classNames from "classnames";
 import "github-markdown-css";
 import { IchangeType, INoteType } from "@views/note/_catalog/redux";
+import { MdEditor } from "@components/markdown";
 
 
 
@@ -97,29 +98,47 @@ export class NotePanel extends React.Component<INotePanelType, {}> {
                 "editor-panel": true,
                 "markdown-body": status === "r",
             });
+
             if (status === "r") {
                 return (
                     <div className={editClass}
                         style={{
-                            display: status === "r" ? "flex" : "none",
+                            display: "none",
                         }}
                         dangerouslySetInnerHTML={{ __html: this.renderText() }}>
                     </div>
                 );
             } else if (status === "w") {
-                return (
-                    <div
-                        className="editor-panel"
-                        style={{
-                            display: status === "w" ? "flex" : "none",
-                        }}>
-                        <QuillEditor
-                            context={this.renderText()}
-                            getText={this.getText}
-                            getHTML={this.getHTML}
-                            fileType={filetype} />
-                    </div>
-                );
+                if (filetype === "file-markdown") {
+                    return (
+                        <div
+                            className="editor-panel"
+                            style={{
+                                display: "flex",
+                            }}
+                        >
+                            <MdEditor
+                                context={this.renderText()}
+                                getText={this.getText} />
+                        </div>
+                    );
+                } else if (filetype === "file-text") {
+                    return (
+                        <div
+                            className="editor-panel"
+                            style={{
+                                display: "flex",
+                            }}>
+                            <QuillEditor
+                                context={this.renderText()}
+                                getHTML={this.getHTML} />
+                        </div>
+                    );
+                } else {
+                    return (
+                        <h1>文件类型错误{filetype}</h1>
+                    );
+                }
             } else {
                 return (
                     <h1>状态错误{status}</h1>
