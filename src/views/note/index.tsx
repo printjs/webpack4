@@ -1,13 +1,21 @@
 import * as React from "react";
 import "./style.styl";
 import { Input, Icon } from "antd";
-import { NoteCatalogComponent } from "@components/notecatalog";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
-import { addNoteInList, IAddNoteType, findNoteById, IchangeType, updateNoteInList, INoteType } from "@components/notecatalog/redux";
 import { generator } from "@utils/generator";
-import { NotePanel } from "@views/note/_notepanel";
-import { ITabType, updateTab } from "@views/note/_notepanel/_notetab/redux";
+import { ITabType, updateTab, defaultTab, addTab } from "@views/note/_notepanel/_notetab/redux";
+import { NotePanel } from "@views/note/_notepanel/_editor";
+import { NoteCatalog } from "@views/note/_catalog";
+import {
+    addNoteInList,
+    IAddNoteType,
+    findNoteById,
+    IchangeType,
+    updateNoteInList,
+    INoteType,
+    getNoteList,
+} from "@views/note/_catalog/redux";
 
 
 
@@ -16,14 +24,23 @@ interface INoteContainerType {
     addFile: (opt: IAddNoteType) => void;
     findNoteById: (id: string) => void;
     noteDetail: INoteType;
+    noteList: INoteType[];
     updateNoteInList: (id: string, item: IchangeType[]) => void;
     updateTab: (opt: ITabType) => void;
+    getNoteList: () => void;
+    defaultTab: (key: string) => void;
+    addTab: (opt: {
+        key: string;
+        title: string;
+    }) => void;
 }
 
 class Note extends React.Component<INoteContainerType, {}> {
 
     constructor(props: INoteContainerType) {
         super(props);
+        const { getNoteList } = this.props;
+        getNoteList();
     }
 
 
@@ -48,7 +65,15 @@ class Note extends React.Component<INoteContainerType, {}> {
 
 
     public render() {
-        const { noteDetail, updateNoteInList, updateTab } = this.props;
+        const {
+            noteDetail,
+            updateNoteInList,
+            updateTab,
+            findNoteById,
+            noteList,
+            addTab,
+            defaultTab,
+        } = this.props;
         return (
             <React.Fragment>
                 <div className="note-catalog-panel">
@@ -65,7 +90,12 @@ class Note extends React.Component<INoteContainerType, {}> {
                         </div>
                     </div>
                     <div className="note-tool-panel">
-                        <NoteCatalogComponent activeId={this.activeId} />
+                        <NoteCatalog
+                            findNoteById={findNoteById}
+                            noteList={noteList}
+                            addTab={addTab}
+                            defaultTab={defaultTab}
+                        />
                     </div>
                 </div>
                 <div className="note-work-panel">
@@ -82,12 +112,14 @@ class Note extends React.Component<INoteContainerType, {}> {
 
 function mapStateToProps(state: IStore) {
     const { handleNote } = state;
-    const { note } = handleNote;
-    console.log(note);
+    const { note, noteList } = handleNote;
     return {
         noteDetail: {
             ...note,
         },
+        noteList: [
+            ...noteList,
+        ],
     };
 }
 
@@ -104,6 +136,18 @@ function mapDispatchToProps(dispatch: (p: any) => void) {
         },
         updateTab: (opt: ITabType) => {
             dispatch(updateTab(opt));
+        },
+        getNoteList: () => {
+            dispatch(getNoteList());
+        },
+        defaultTab: (key: string) => {
+            dispatch(defaultTab(key));
+        },
+        addTab: (opt: {
+            key: string;
+            title: string;
+        }) => {
+            dispatch(addTab(opt));
         },
     };
 }

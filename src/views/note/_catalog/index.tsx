@@ -3,9 +3,9 @@ import { Icon, Popover, Input, List, message, Popconfirm } from "antd";
 import { connect } from "react-redux";
 import "./style.styl";
 import { IStore } from "@store/store";
-import { getNoteList, INoteType } from "@components/notecatalog/redux";
 import { generator } from "@utils/generator";
 import { addTab, defaultTab } from "@views/note/_notepanel/_notetab/redux";
+import { getNoteList, INoteType } from "@views/note/_catalog/redux";
 /**
  * icon
  * file-text
@@ -19,21 +19,21 @@ import { addTab, defaultTab } from "@views/note/_notepanel/_notetab/redux";
 
 interface ICatalog {
     noteList: INoteType[];
-    addTab: ({ }) => void;
-    getNoteList: () => void;
+    addTab: (opt: {
+        key: string;
+        title: string;
+    }) => void;
     defaultTab: (key: string) => void;
-    activeId: (id: string) => void;
+    findNoteById: (id: string) => void;
 }
 
-class Note extends React.Component<ICatalog, {}> {
+export class NoteCatalog extends React.Component<ICatalog, {}> {
     constructor(props: ICatalog) {
         super(props);
-        const { getNoteList } = this.props;
-        getNoteList();
     }
 
     public handleClick = (e: any, key: string) => {
-        const { noteList, addTab, defaultTab, activeId } = this.props;
+        const { noteList, addTab, defaultTab, findNoteById } = this.props;
         for (let i = 0, len = noteList.length; i < len; i++) {
             if (noteList[i].id === key) {
                 addTab({
@@ -41,7 +41,7 @@ class Note extends React.Component<ICatalog, {}> {
                     title: noteList[i].title,
                 });
                 defaultTab(noteList[i].id);
-                activeId(noteList[i].id);
+                findNoteById(noteList[i].id);
                 return;
             }
         }
@@ -104,35 +104,3 @@ const content = (
     </div>
 );
 
-function mapStateToProps(state: IStore) {
-    const { handleNote } = state;
-    const { noteList } = handleNote;
-    return {
-        noteList: noteList,
-    };
-}
-
-
-function mapDispatchToProps(dispatch: (p: any) => void) {
-    return {
-        addTab: (opt: {
-            key: string;
-            title: string;
-        }) => {
-            dispatch(addTab(opt));
-        },
-        getNoteList: () => {
-            dispatch(getNoteList());
-        },
-        defaultTab: (key: string) => {
-            dispatch(defaultTab(key));
-        },
-    };
-}
-
-
-
-
-
-
-export const NoteCatalogComponent = connect(mapStateToProps, mapDispatchToProps)(Note);

@@ -159,14 +159,11 @@ export function handleNote(state: INoteStoreType = initNote, action: AnyAction) 
                             item[param.props] = param.value;
                         }
                     }
+                    item.updatetime = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+                    tempNote = item;
                 }
-                item.updatetime = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-                tempNote = item;
                 return item;
             });
-            console.log(tempNote);
-            console.log("=====");
-            console.log(temp2);
             return {
                 note: {
                     ...tempNote,

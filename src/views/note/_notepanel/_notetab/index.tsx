@@ -5,7 +5,7 @@ import { IStore } from "@store/store";
 import { connect } from "react-redux";
 import "./style.styl";
 import { ItabStateType, updateTab, delTab, addTab, ITabType, defaultTab } from "@views/note/_notepanel/_notetab/redux";
-import { findNoteById } from "@components/notecatalog/redux";
+import { findNoteById } from "@views/note/_catalog/redux";
 
 
 
@@ -22,11 +22,11 @@ interface INoteTabsType {
 class NoteTabs extends React.Component<INoteTabsType, {}> {
     constructor(props: INoteTabsType) {
         super(props);
-        const { addTab } = this.props;
-        addTab({
-            key: "welcome",
-            title: "欢迎页",
-        });
+        // const { addTab } = this.props;
+        // addTab({
+        //     key: "welcome",
+        //     title: "欢迎页",
+        // });
     }
 
     public onChange = (activeKey: string) => {

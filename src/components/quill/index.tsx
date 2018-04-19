@@ -5,31 +5,22 @@ import * as ReactDOM from "react-dom";
 
 
 
-export class QuillEditor extends React.Component<{}, {}> {
+export class QuillEditor extends React.Component<{
+    context: string;
+    getText?: (text: string) => void;
+    getHTML?: (html: string) => void;
+    fileType: string;
+}, {}> {
     public quill!: Quill;
     public componentDidMount() {
-        const fonts = ["sofia", "slabo", "roboto", "inconsolata", "ubuntu"];
         this.quill = new Quill(ReactDOM.findDOMNode(this.refs.quill), {
             modules: {
-                // toolbar: ReactDOM.1findDOMNode(this.refs.toolbar),
-                // "toolbar": [
-                //     // { "font": fonts }, 
-                //     [{ "size": [] }],
-                //     ["bold", "italic", "underline", "strike"],
-                //     [{ "color": [] }, { "background": [] }],
-                //     [{ "script": "super" }, { "script": "sub" }],
-                //     [{ "header": "1" }, { "header": "2" }, "blockquote", "code-block"],
-                //     [{ "list": "ordered" }, { "list": "bullet" }, { "indent": "-1" }, { "indent": "+1" }],
-                //     ["direction", { "align": [] }],
-                //     ["link", "image", "video", "formula"],
-                //     ["clean"],
-                // ],
             },
             placeholder: "请输入笔记",
             theme: "snow",
         });
         this.quill.on("text-change", this.textChange);
-
+        this.renderHTML();
     }
 
 
@@ -38,10 +29,21 @@ export class QuillEditor extends React.Component<{}, {}> {
     }
 
     public textChange = (a: any, b: any, c: any) => {
-        console.log(this.quill.getText());
-        console.log("===============");
-        console.log(this.quill.root.innerHTML);
+        const { getHTML, getText, fileType } = this.props;
+        if (getHTML && fileType === "file-text") {
+            getHTML(this.quill.root.innerHTML);
+        }
+        if (getText && fileType === "file-markdown") {
+            getText(this.quill.getText());
+        }
+
     }
+
+    public renderHTML = () => {
+        const { context, fileType } = this.props;
+        this.quill.clipboard.dangerouslyPasteHTML(context);
+    }
+
 
     public render() {
         return (

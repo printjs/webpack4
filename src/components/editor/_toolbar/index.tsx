@@ -7,7 +7,9 @@ const { Option } = Select;
 import "./style.styl";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
-import { updateNoteInList, IchangeType } from "@components/notecatalog/redux";
+import { updateNoteInList, IchangeType } from "@views/note/_catalog/redux";
+
+
 
 
 interface IEditorToolType {
