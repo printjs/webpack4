@@ -32,6 +32,7 @@ import { NoteTabs } from "@views/note/_notetab";
 
 
 
+
 interface INoteContainerType {
     tabs: ITabType[];
     defaultKey: string;
@@ -57,10 +58,11 @@ class Note extends React.Component<INoteContainerType, {}> {
         super(props);
         const { getNoteList } = this.props;
         getNoteList();
+        this.createNote.bind(this);
     }
 
 
-    public createNote = (type: "file-text" | "file-markdown") => {
+    public async createNote(type: "file-text" | "file-markdown") {
         let temp = new Date().getTime() + "";
         const { addFile } = this.props;
         addFile({
@@ -68,6 +70,8 @@ class Note extends React.Component<INoteContainerType, {}> {
             filetype: type,
             pId: "1",
         });
+        // console.log(ipcRenderer);
+        // ipcRenderer.send("test");
     }
 
 

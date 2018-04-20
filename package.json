@@ -11,7 +11,7 @@
     "create": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli --config webpack.config.ts",
     "prod": "npm run rm:rf&&npm run create",
     "start": "node_modules/.bin/webpack-dev-server --hot --watch --port 9999",
-    "window": "node_modules/.bin/electron ."
+    "window": "cross-env NODE_ENV='development' PORT='9999' node_modules/.bin/electron ."
   },
   "repository": {
     "type": "git",
