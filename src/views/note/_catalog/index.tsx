@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import "./style.styl";
 import { IStore } from "@store/store";
 import { generator } from "@utils/generator";
-import { addTab, defaultTab } from "@views/note/_notepanel/_notetab/redux";
+import { addTab, defaultTab, ITabType } from "@views/note/_notetab/redux";
 import { getNoteList, INoteType, IchangeType } from "@views/note/_catalog/redux";
 import { markdown } from "@utils/md";
 /**
@@ -20,13 +20,16 @@ import { markdown } from "@utils/md";
 
 interface ICatalog {
     noteList: INoteType[];
+    tabs: ITabType[];
     addTab: (opt: {
         key: string;
         title: string;
     }) => void;
+    delTab: (id: string) => void;
     defaultTab: (key: string) => void;
     findNoteById: (id: string) => void;
     updateNoteInList: (id: string, item: IchangeType[]) => void;
+    delNoteInList: (id: string) => void;
 }
 
 export class NoteCatalog extends React.Component<ICatalog, {}> {
@@ -50,9 +53,24 @@ export class NoteCatalog extends React.Component<ICatalog, {}> {
     }
 
 
-    public confirm(e: any) {
+    public confirm(e: any, id: string) {
         e.stopPropagation();
-        message.success("Click on Yes");
+        const { delNoteInList, delTab, tabs, findNoteById } = this.props;
+        for (let i = 0, len = tabs.length; i < len; i++) {
+            if (tabs[i].key === id) {
+                if (tabs[i - 1]) {
+                    findNoteById(tabs[i - 1].key);
+                } else if (tabs[i + 1]) {
+                    findNoteById(tabs[i + 1].key);
+                } else {
+                    // console.warn("");
+                }
+            }
+        }
+        delTab(id);
+        delNoteInList(id);
+
+        message.success(`${id}`);
     }
 
     public renderText(str: string, fileType: "file-text" | "file-markdown") {
@@ -87,7 +105,7 @@ export class NoteCatalog extends React.Component<ICatalog, {}> {
                                 <Icon type="profile" onClick={(e) => this.handleClick(e, item.id)} />,
                                 <Popconfirm
                                     title="你确定删除这篇笔记吗?"
-                                    onConfirm={(e) => this.confirm(e)}
+                                    onConfirm={(e) => this.confirm(e, item.id)}
                                     // onCancel={this.cancel}
                                     okText="确定"
                                     cancelText="取消">

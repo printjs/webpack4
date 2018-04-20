@@ -43,3 +43,68 @@
 .note-work-panel
     position relative
     flex-grow 1
+    >.note-tabs
+        position absolute
+        left 0px
+        right 0px
+        top 0px
+        bottom 0px
+        display flex
+        flex-direction column
+        >.MD
+            padding 0 10px
+            display flex
+            flex-grow 1
+            flex-direction column
+            >.note-title-panel
+                display flex
+                align-items center
+                >.ant-radio-group 
+                    display flex
+                    margin-right 10px
+                >.ant-input
+                    border-width 0
+                    &:focus
+                        box-shadow 0 0 0 0 transparent
+            >.md-rich-editor
+                display flex
+                flex-direction column
+                flex-grow 1
+                position relative
+                >.markdown-body
+                    display block !important
+                    position absolute
+                    overflow-y auto
+                    left 0px
+                    right 0px
+                    bottom 10px
+                    top 10px
+                >.editor-panel
+                    display flex
+                    flex-grow 1
+                    flex-direction column
+                    >.ql-container 
+                        position absolute
+                        left 0px
+                        right 0px
+                        bottom 10px
+                        top 42px
+                        overflow auto
+                        height auto
+                        border-width 0px
+                    >.ql-toolbar
+                        border-width 0px
+                    >.editor-toolbar
+                        border-width 0px
+                        padding 0px
+                    >.CodeMirror
+                        position absolute
+                        left 0px
+                        right 0px
+                        bottom 10px
+                        top 42px
+                        overflow auto
+                        height auto
+                        border-width 0px
+                    >.editor-statusbar
+                        display none

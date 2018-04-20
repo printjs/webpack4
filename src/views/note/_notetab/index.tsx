@@ -1,16 +1,15 @@
 import * as React from "react";
 import { Tabs, Icon } from "antd";
 const { TabPane } = Tabs;
-import { IStore } from "@store/store";
-import { connect } from "react-redux";
 import "./style.styl";
-import { ItabStateType, updateTab, delTab, addTab, ITabType, defaultTab } from "@views/note/_notepanel/_notetab/redux";
 import { findNoteById } from "@views/note/_catalog/redux";
+import { ITabType } from "@views/note/_notetab/redux";
 
 
 
 interface INoteTabsType {
-    noteTabStore: ItabStateType;
+    tabs: ITabType[];
+    defaultKey: string;
     updateTab: (opt: ITabType) => void;
     delTab: (opt: string) => void;
     addTab: (opt: ITabType) => void;
@@ -19,14 +18,9 @@ interface INoteTabsType {
 }
 
 
-class NoteTabs extends React.Component<INoteTabsType, {}> {
+export class NoteTabs extends React.Component<INoteTabsType, {}> {
     constructor(props: INoteTabsType) {
         super(props);
-        // const { addTab } = this.props;
-        // addTab({
-        //     key: "welcome",
-        //     title: "欢迎页",
-        // });
     }
 
     public onChange = (activeKey: string) => {
@@ -36,17 +30,18 @@ class NoteTabs extends React.Component<INoteTabsType, {}> {
     }
 
 
-    public remove = (targetKey: string) => {
-        const { delTab, noteTabStore, defaultTab } = this.props;
-        const { tabs } = noteTabStore;
+    public remove = (targetKey: string, e: any) => {
+        e.stopPropagation();
+        const { delTab, tabs, findNoteById } = this.props;
         for (let i = 0, len = tabs.length; i < len; i++) {
-            if (targetKey === tabs[i].key) {
+            if (tabs[i].key === targetKey) {
                 if (tabs[i - 1]) {
-                    defaultTab(tabs[i - 1].key);
+                    findNoteById(tabs[i - 1].key);
                 } else if (tabs[i + 1]) {
-                    defaultTab(tabs[i + 1].key);
+                    findNoteById(tabs[i + 1].key);
+                } else {
+                    // console.warn("");
                 }
-                break;
             }
         }
         delTab(targetKey);
@@ -57,8 +52,7 @@ class NoteTabs extends React.Component<INoteTabsType, {}> {
 
 
     public render() {
-        const { noteTabStore } = this.props;
-        const { tabs, defaultKey } = noteTabStore;
+        const { tabs, defaultKey } = this.props;
         return (
             <Tabs
                 activeKey={defaultKey}
@@ -71,7 +65,7 @@ class NoteTabs extends React.Component<INoteTabsType, {}> {
                             <React.Fragment>
                                 <span title={pane.title} style={{ marginRight: "5px" }}>{pane.title}</span>
                                 <Icon type="close"
-                                    onClick={() => this.remove(pane.key)}
+                                    onClick={(e) => this.remove(pane.key, e)}
                                     style={{ display: pane.closedisable ? "none" : "inline" }} />
                             </React.Fragment>
                         } key={pane.key}>
@@ -103,40 +97,3 @@ class NoteTabs extends React.Component<INoteTabsType, {}> {
         );
     }
 }
-
-
-function mapStateToProps(state: IStore) {
-    const { handleTab } = state;
-    return {
-        noteTabStore: {
-            ...handleTab,
-        },
-    };
-}
-
-
-
-function mapDispatchToProps(dispatch: (p: any) => void) {
-    return {
-        updateTab: (opt: ITabType) => {
-            dispatch(updateTab(opt));
-        },
-        delTab: (key: string) => {
-            dispatch(delTab(key));
-        },
-        addTab: (opt: ITabType) => {
-            dispatch(addTab(opt));
-        },
-        defaultTab: (key: string) => {
-            dispatch(defaultTab(key));
-        },
-        findNoteById: (id: string) => {
-            dispatch(findNoteById(id));
-        },
-    };
-}
-
-
-
-
-export const NoteTabsComponent = connect(mapStateToProps, mapDispatchToProps)(NoteTabs);

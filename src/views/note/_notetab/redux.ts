@@ -49,7 +49,7 @@ export interface ItabStateType {
 }
 
 const initState = {
-    defaultKey: "welcome",
+    defaultKey: "",
     tabs: [],
 };
 
@@ -57,7 +57,8 @@ export function handleTab(state: ItabStateType = initState, action: AnyAction) {
     switch (action.type) {
         case ADDTAB:
             let flag = true;
-            for (let item of state.tabs) {
+            let temp1 = state.tabs.slice(0);
+            for (let item of temp1) {
                 if (item.key === action.key) {
                     flag = false;
                     break;
@@ -65,41 +66,69 @@ export function handleTab(state: ItabStateType = initState, action: AnyAction) {
             }
             if (flag) {
                 if (action.key === "welcome") {
-                    state.tabs.push({
+                    temp1.push({
                         title: action.title,
                         key: action.key,
                         closedisable: true,
                     });
                 } else {
-                    state.tabs.push({
+                    temp1.push({
                         title: action.title,
                         key: action.key,
                     });
                 }
             }
-            break;
+            return {
+                defaultKey: action.key,
+                tabs: [
+                    ...temp1,
+                ],
+            };
         case UPDATETAB:
-            for (let item of state.tabs) {
+            let temp2 = state.tabs.slice(0);
+            for (let item of temp2) {
                 if (item.key === action.key) {
                     item.title = action.title;
                     break;
                 }
             }
-            break;
+            return {
+                defaultKey: action.key,
+                tabs: [
+                    ...temp2,
+                ],
+            };
         case DELTAB:
-            for (let i = 0, len = state.tabs.length; i < len; i++) {
-                if (state.tabs[i].key === action.key) {
-                    state.tabs.splice(i, 1);
+            let temp3 = state.tabs.slice(0);
+            let defaultKey1: string = action.key;
+            for (let i = 0, len = temp3.length; i < len; i++) {
+                if (temp3[i].key === action.key) {
+                    if (temp3[i - 1]) {
+                        defaultKey1 = temp3[i - 1].key;
+                    } else if (temp3[i + 1]) {
+                        defaultKey1 = temp3[i + 1].key;
+                    } else {
+                        defaultKey1 = "";
+                    }
+                    temp3.splice(i, 1);
                     break;
                 }
             }
-            break;
+            return {
+                defaultKey: defaultKey1,
+                tabs: [
+                    ...temp3,
+                ],
+            };
         case DEFAULTTAB:
-            state.defaultKey = action.key;
-            break;
+            return {
+                defaultKey: action.key,
+                tabs: [
+                    ...state.tabs,
+                ],
+            };
         default:
-            break;
+            return state;
     }
-    return Object.assign({}, state);
 }
 
