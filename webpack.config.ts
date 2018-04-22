@@ -33,7 +33,7 @@ const webpackConfig: webpack.Configuration = {
         "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true",
         "./src/main.tsx",
     ],
-    // entry: "./src/main.tsx",
+    target: "electron-main",
     mode: env(process.env.NODE_ENV),
     devServer: {
         contentBase: path.join(__dirname, "dist"),

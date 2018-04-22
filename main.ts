@@ -1,7 +1,9 @@
-import { app, BrowserWindow, ipcRenderer } from "electron";
+import { app, BrowserWindow, ipcMain, webContents } from "electron";
 import * as path from "path";
 import * as url from "url";
 
+
+// const win = new BrowserWindow({ width: 800, height: 600 });
 
 function createWindow() {
     // Create the browser window.
@@ -22,6 +24,11 @@ function createWindow() {
     win.loadURL(url.format(process.env.NODE_ENV === "development" ? dev : prod));
 
     win.webContents.openDevTools();
+
+    ipcMain.on("test", (event: any, val: string) => {
+        console.log(val);
+    });
 }
+
 
 app.on("ready", createWindow);

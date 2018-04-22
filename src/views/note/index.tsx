@@ -29,6 +29,7 @@ import { markdown } from "@utils/md";
 import { MdEditor } from "@components/markdown";
 import { QuillEditor } from "@components/quill";
 import { NoteTabs } from "@views/note/_notetab";
+import { ipcRenderer } from "electron";
 
 
 
@@ -59,6 +60,11 @@ class Note extends React.Component<INoteContainerType, {}> {
         const { getNoteList } = this.props;
         getNoteList();
         this.createNote.bind(this);
+
+        ipcRenderer.on("test2", (event: any, arg: string) => {
+            console.log(event);
+            console.log(arg);
+        });
     }
 
 
@@ -70,8 +76,8 @@ class Note extends React.Component<INoteContainerType, {}> {
             filetype: type,
             pId: "1",
         });
-        // console.log(ipcRenderer);
-        // ipcRenderer.send("test");
+        console.log(ipcRenderer);
+        ipcRenderer.send("test", 12313);
     }
 
 
