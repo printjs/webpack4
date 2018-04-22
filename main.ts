@@ -1,17 +1,15 @@
-import { app, BrowserWindow, ipcMain, webContents } from "electron";
+import { app, BrowserWindow } from "electron";
 import * as path from "path";
 import * as url from "url";
-
-
-// const win = new BrowserWindow({ width: 800, height: 600 });
+console.log(path.join(__dirname, "/index.html"));
 
 function createWindow() {
     // Create the browser window.
-    let win = new BrowserWindow({ width: 800, height: 600 });
+    const win = new BrowserWindow({ width: 800, height: 600 });
 
     // 然后加载应用的 index.html。
     const prod: url.UrlObject = {
-        pathname: path.join(__dirname, "/dist/index.html"),
+        pathname: path.join(__dirname, "/index.html"),
         protocol: "file:",
         slashes: true,
     };
@@ -24,11 +22,13 @@ function createWindow() {
     win.loadURL(url.format(process.env.NODE_ENV === "development" ? dev : prod));
 
     win.webContents.openDevTools();
-
-    ipcMain.on("test", (event: any, val: string) => {
-        console.log(val);
-    });
 }
 
 
-app.on("ready", createWindow);
+
+
+function initApp() {
+    createWindow();
+}
+
+app.on("ready", initApp);

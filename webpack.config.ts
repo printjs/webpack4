@@ -33,7 +33,7 @@ const webpackConfig: webpack.Configuration = {
         "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true",
         "./src/main.tsx",
     ],
-    target: "electron-main",
+    target: "electron-renderer",
     mode: env(process.env.NODE_ENV),
     devServer: {
         contentBase: path.join(__dirname, "dist"),
@@ -127,6 +127,7 @@ const webpackConfig: webpack.Configuration = {
             "@store": path.join(__dirname, "/src/store/"),
             "@components": path.join(__dirname, "/src/components"),
             "@utils": path.join(__dirname, "/src/utils"),
+            "@main": path.join(__dirname, "/src/main_process"),
         },
     },
     output: {

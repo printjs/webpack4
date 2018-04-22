@@ -2,7 +2,7 @@
   "name": "webpack4",
   "version": "1.0.0",
   "description": "webpack4 ts",
-  "main": "index.js",
+  "main": "./dist/main.js",
   "scripts": {
     "tslint": "node_modules/.bin/tslint --init",
     "tsconfig": "",
@@ -11,7 +11,9 @@
     "create": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli --config webpack.config.ts",
     "prod": "npm run rm:rf&&npm run create",
     "start": "node_modules/.bin/webpack-dev-server --hot --watch --port 9999",
-    "window": "cross-env NODE_ENV='development' PORT='9999' node_modules/.bin/electron . --enable-logging"
+    "window": "cross-env NODE_ENV='production' PORT='9999' node_modules/.bin/electron . --enable-logging",
+    "main": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli.cmd  --config webpack.main.ts",
+    "renderer": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli.cmd  --config webpack.config.ts"
   },
   "repository": {
     "type": "git",
