@@ -41,7 +41,7 @@ const mainConfig: webpack.Configuration = {
         __filename: process.env.NODE_ENV !== "production",
     },
     output: {
-        filename: "[name].js",
+        filename: "[name].webpack.js",
         libraryTarget: "commonjs2",
         path: path.join(__dirname, "./dist"),
     },

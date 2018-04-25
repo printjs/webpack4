@@ -5,15 +5,16 @@
   "main": "./dist/main.js",
   "scripts": {
     "tslint": "node_modules/.bin/tslint --init",
-    "tsconfig": "",
-    "server": "cross-env NODE_ENV='development' node_modules/.bin/ts-node server.ts",
+    "tsconfig": "node_modules/.bin/tsc --init",
     "rm:rf": "node_modules/.bin/ts-node.cmd config/del.dist.ts",
-    "create": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli --config webpack.config.ts",
-    "prod": "npm run rm:rf&&npm run create",
+    "prod": "npm run rm:rf&&npm run renderer&&npm run main",
     "start": "node_modules/.bin/webpack-dev-server --hot --watch --port 9999",
-    "window": "cross-env NODE_ENV='production' PORT='9999' node_modules/.bin/electron . --enable-logging",
-    "main": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli.cmd  --config webpack.main.ts",
-    "renderer": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli.cmd  --config webpack.config.ts"
+    "electron": "cross-env NODE_ENV='production' PORT='9999' node_modules/.bin/electron . --enable-logging",
+    "electron:dev": "nodemon --watch main.ts --watch src/main_process --exec npm run electron",
+    "main": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli  --config webpack.main.ts",
+    "main:dev": "cross-env NODE_ENV='development' node_modules/.bin/webpack-cli  -w --config webpack.main.ts",
+    "renderer": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli  --config webpack.config.ts",
+    "renderer:dev": "cross-env NODE_ENV='development' node_modules/.bin/ts-node server.ts"
   },
   "repository": {
     "type": "git",
