@@ -8,8 +8,13 @@
             "type": "node",
             "request": "launch",
             "name": "electron",
+            "env": {
+                "NODE_ENV": "production"
+            },
             "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
             "program": "${workspaceFolder}/dist/main.js",
+            "cwd": "${workspaceFolder}",
+            "sourceMaps": true,
             "protocol": "inspector"
         },
     ]

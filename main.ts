@@ -1,7 +1,8 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
 import * as url from "url";
-console.log(path.join(__dirname, "/index.html"));
+import { Dispatch } from "@main/dispatch";
+
 
 function createWindow() {
     // Create the browser window.
@@ -18,7 +19,7 @@ function createWindow() {
         slashes: true,
         protocol: "http",
     };
-
+    
     win.loadURL(url.format(process.env.NODE_ENV === "development" ? dev : prod));
 
     win.webContents.openDevTools();
@@ -29,6 +30,7 @@ function createWindow() {
 
 function initApp() {
     createWindow();
+    const dispatch = new Dispatch();
 }
 
 app.on("ready", initApp);

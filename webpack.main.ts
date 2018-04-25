@@ -13,6 +13,7 @@ const mainConfig: webpack.Configuration = {
     entry: {
         main: path.join(__dirname, "./main.ts"),
     },
+    devtool: "#source-map",
     externals: [
         ...Object.keys(dependencies || {}),
     ],
@@ -41,7 +42,7 @@ const mainConfig: webpack.Configuration = {
         __filename: process.env.NODE_ENV !== "production",
     },
     output: {
-        filename: "[name].webpack.js",
+        filename: "[name].js",
         libraryTarget: "commonjs2",
         path: path.join(__dirname, "./dist"),
     },
@@ -53,6 +54,9 @@ const mainConfig: webpack.Configuration = {
     ],
     resolve: {
         extensions: [".ts", ".js", ".json"],
+        alias: {
+            "@main": path.join(__dirname, "/src/main_process"),
+        },
     },
     target: "electron-main",
 };
