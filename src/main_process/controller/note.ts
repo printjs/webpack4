@@ -1,8 +1,32 @@
 import * as fs from "fs";
 import { config } from "@main/share/config";
 import * as path from "path";
+import { Buffer } from "buffer";
 
-export class Utils {
+class Utils {
+    public async getAllNotes() {
+        return new Promise((resolve, reject) => {
+            fs.readdir(config.noteFiles, async (err, files) => {
+                try {
+                    const datas = await Promise.all(files.map(async (filename, $index) => {
+                        return await this.openNote("r", filename) || "";
+                    }));
+                    const temp1: any = datas.filter((data) => data !== "");
+                    const result = temp1.map((item: string, $index: number) => {
+                        try {
+                            return JSON.parse(item);
+                        } catch (error) {
+                            reject(error);
+                        }
+                    });
+                    resolve(result);
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        });
+    }
+
     public async delNote(path: string) {
         return new Promise((resolve, reject) => {
             fs.unlink(path, (err) => {
@@ -24,31 +48,33 @@ export class Utils {
 
     }
 
-    public async openNote(operation: "r" | "w" | "a", data: string, mode?: number) {
+    public async openNote(operation: "r" | "w" | "a", filename: string, data?: string | Buffer, mode?: number) {
         return new Promise((resolve, reject) => {
-            fs.open("myfile", operation, async (err, fd) => {
-                if (err) {
+            fs.open(path.join(config.noteFiles, filename), operation, async (err, fd) => {
+                try {
+                    switch (operation) {
+                        case "r":
+                            resolve(await this.readMyData(fd));
+                            break;
+                        case "w":
+                            resolve(await this.writeMyData(fd, data || ""));
+                            break;
+                        case "a":
+                            resolve(await this.writeMyData(fd, data || ""));
+                            break;
+                        default:
+                            break;
+                    }
+                    fs.closeSync(fd);
+                } catch (err) {
+                    reject(err);
                     if (err.code === "ENOENT") {
                         console.error("myfile does not exist");
-                        return;
                     } else if (err.code === "EEXIST") {
                         console.error("myfile already exists");
-                        return;
+                    } else if (err.code === "EISDIR") {
+                        console.error("myfile is directory");
                     }
-                    throw err;
-                }
-                switch (operation) {
-                    case "r":
-                        resolve(await this.readMyData(fd));
-                        break;
-                    case "w":
-                        resolve(await this.writeMyData(fd, data));
-                        break;
-                    case "a":
-                        resolve(await this.writeMyData(fd, data));
-                        break;
-                    default:
-                        break;
                 }
             });
         });
@@ -57,23 +83,41 @@ export class Utils {
     private async readMyData(fd: number) {
         return new Promise((resolve, reject) => {
             fs.readFile(fd, "utf8", async (err, data) => {
-                if (err) {
-                    throw err;
+                try {
+                    resolve(data);
+                } catch (err) {
+                    reject(err);
                 }
-                resolve(data);
             });
         });
     }
 
 
-    private async writeMyData(fd: number, data: string) {
+    private async writeMyData(fd: number, data: string | Buffer) {
         return new Promise((resolve, reject) => {
-            fs.writeFile(fd, data, (err) => {
-                if (err) {
-                    throw err;
+            fs.writeFile(fd, JSON.stringify(data), (err) => {
+                try {
+                    resolve("The file has been saved!");
+                } catch (err) {
+                    reject(err);
                 }
-                resolve("The file has been saved!");
             });
         });
     }
 }
+
+
+export const noteUtils = new Utils();
+
+
+
+
+// async function test() {
+//     await noteUtils.getAllNotes(path.join(__dirname, "../../../files"));
+//     await noteUtils.openNote("w", Buffer.from("dsfjklsadjfkasdfjkasjdfasjldf"));
+//     await noteUtils.openNote("r", "");
+// }
+
+// test().catch((err: string) => {
+//     console.warn(err);
+// });

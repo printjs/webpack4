@@ -5,7 +5,7 @@ import "./style.styl";
 import { IStore } from "@store/store";
 import { generator } from "@utils/generator";
 import { addTab, defaultTab, ITabType } from "@views/note/_notetab/redux";
-import { getNoteList, INoteType, IchangeType } from "@views/note/_catalog/redux";
+import { INoteType, IchangeType } from "@views/note/_catalog/redux";
 import { markdown } from "@utils/md";
 /**
  * icon

@@ -30,7 +30,7 @@ import { MdEditor } from "@components/markdown";
 import { QuillEditor } from "@components/quill";
 import { NoteTabs } from "@views/note/_notetab";
 import { ipcRenderer } from "electron";
-import * as fs from "fs";
+import { CONSTANT } from "@main/share/constant";
 
 
 
@@ -59,13 +59,9 @@ class Note extends React.Component<INoteContainerType, {}> {
     constructor(props: INoteContainerType) {
         super(props);
         const { getNoteList } = this.props;
-        getNoteList();
+        ipcRenderer.send(CONSTANT.NOTEFILE.GETALL);
+        // getNoteList();
         this.createNote.bind(this);
-
-        ipcRenderer.on("test2", (event: any, arg: string) => {
-            console.log(event);
-            console.log(arg);
-        });
     }
 
 
@@ -77,9 +73,6 @@ class Note extends React.Component<INoteContainerType, {}> {
             filetype: type,
             pId: "1",
         });
-
-        // console.log(fs);
-        ipcRenderer.send("test", 12313);
     }
 
 
@@ -292,7 +285,6 @@ function mapStateToProps(state: IStore) {
     const { handleNote, handleTab } = state;
     const { note, noteList } = handleNote;
     const { defaultKey, tabs } = handleTab;
-
     return {
         noteDetail: {
             ...note,

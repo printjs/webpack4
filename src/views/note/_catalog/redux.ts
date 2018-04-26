@@ -1,11 +1,15 @@
 import { AnyAction } from "redux";
 import moment from "moment";
+import { ipcRenderer, IpcMessageEvent } from "electron";
+import { CONSTANT } from "@main/share/constant";
+import { store } from "@store/store";
 
 export const GETNOTELIST = "获取所有笔记的列表";
 export const ADDNOTEINLIST = "在笔记列表中添加文件";
 export const DELNOTEINLIST = "删除笔记列表中的文件";
 export const UPDATENOTEINLIST = "更新笔记列表";
 export const FINDNOTEBYID = "通过id来查找笔记";
+export const SYNCNOTELIST = "同步笔记列表";
 
 export interface INoteType {
     title: string;
@@ -19,6 +23,12 @@ export interface INoteType {
     top: boolean;
 }
 
+export function syncNoteList(list: INoteType[]) {
+    return {
+        type: SYNCNOTELIST,
+        noteList: list,
+    };
+}
 
 export function getNoteList() {
     return {
@@ -67,22 +77,6 @@ export function findNoteById(id: string) {
 }
 
 
-const noteList: INoteType[] = [
-    {
-        title: "file1111111111111111111111111111111111111111111111111111111111111111111111",
-        id: "111111111111111111111111111111111111111111111111",
-        filetype: "file-text",
-        context: `We supply a series of design principles,
-         practical patterns and high quality design resources
-          (Sketch and Axure), to help people create their product prototypes beautifully
-           and efficiently.`,
-        status: "r",
-        updatetime: "2019-8-8",
-        createtime: "2019-8-8",
-        parentId: "",
-        top: false,
-    },
-];
 
 function isIchangeType(x: any): x is IchangeType {
     return typeof x !== "undefined";
@@ -108,8 +102,21 @@ const initNote: INoteStoreType = {
     },
 };
 
+ipcRenderer.on(CONSTANT.NOTEFILE.GETALL, async (event: IpcMessageEvent, args: any) => {
+    store.dispatch(syncNoteList(args));
+});
+
 export function handleNote(state: INoteStoreType = initNote, action: AnyAction) {
     switch (action.type) {
+        case SYNCNOTELIST:
+            return {
+                note: {
+                    ...state.note,
+                },
+                noteList: [
+                    ...action.noteList,
+                ],
+            };
         case GETNOTELIST:
             return state;
         case ADDNOTEINLIST:

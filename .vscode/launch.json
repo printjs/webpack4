@@ -17,5 +17,17 @@
             "sourceMaps": true,
             "protocol": "inspector"
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "ts",
+            "runtimeArgs": [
+                "-r",
+                "ts-node/register"
+            ],
+            "args": [
+                "${workspaceFolder}/src/main_process/controller/note.ts"
+            ]
+        }
     ]
 }
