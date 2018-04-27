@@ -3,8 +3,8 @@ import moment from "moment";
 import { ipcRenderer, IpcMessageEvent } from "electron";
 import { CONSTANT } from "@main/share/constant";
 import { store } from "@store/store";
+import { generator } from "@utils/generator";
 
-export const GETNOTELIST = "获取所有笔记的列表";
 export const ADDNOTEINLIST = "在笔记列表中添加文件";
 export const DELNOTEINLIST = "删除笔记列表中的文件";
 export const UPDATENOTEINLIST = "更新笔记列表";
@@ -19,7 +19,6 @@ export interface INoteType {
     id: string;
     updatetime: string;
     createtime: string;
-    parentId: string;
     top: boolean;
 }
 
@@ -30,23 +29,27 @@ export function syncNoteList(list: INoteType[]) {
     };
 }
 
-export function getNoteList() {
-    return {
-        type: GETNOTELIST,
+
+export function addNoteInList(fileType: "file-text" | "file-markdown") {
+    let id = generator.createId(new Date().getTime() + "");
+    let temp = {
+        title: fileType === "file-text" ? "新建文件" : "新建markdown文件",
+        id: id,
+        filetype: fileType,
+        context: "新建内容",
+        status: "r",
+        updatetime: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+        createtime: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+        top: false,
     };
-}
-
-
-export interface IAddNoteType {
-    id: string;
-    pId: string;
-    filetype: "file-text" | "file-markdown";
-}
-
-export function addNoteInList(opt: IAddNoteType) {
+    ipcRenderer.send(CONSTANT.NOTEFILE.CREATE, {
+        id: id,
+        context: fileType === "file-markdown" ? "新建markdown文件" : "新建文件",
+        attr: temp,
+    });
     return Object.assign({
         type: ADDNOTEINLIST,
-    }, opt);
+    }, temp);
 }
 
 export function delNoteInList(key: string) {
@@ -58,7 +61,7 @@ export function delNoteInList(key: string) {
 
 export interface IchangeType {
     value: any;
-    props: "title" | "context" | "status" | "parentId" | "top";
+    props: "title" | "context" | "status" | "top";
 }
 export function updateNoteInList(key: string, opt: IchangeType[]) {
     return {
@@ -97,13 +100,17 @@ const initNote: INoteStoreType = {
         status: "r",
         updatetime: "init",
         createtime: "init",
-        parentId: "",
         top: false,
     },
 };
 
 ipcRenderer.on(CONSTANT.NOTEFILE.GETALL, async (event: IpcMessageEvent, args: any) => {
+    console.log(args);
     store.dispatch(syncNoteList(args));
+});
+
+ipcRenderer.on(CONSTANT.NOTEFILE.CREATE, async (event: IpcMessageEvent, args: any) => {
+    console.log(args);
 });
 
 export function handleNote(state: INoteStoreType = initNote, action: AnyAction) {
@@ -117,8 +124,6 @@ export function handleNote(state: INoteStoreType = initNote, action: AnyAction) 
                     ...action.noteList,
                 ],
             };
-        case GETNOTELIST:
-            return state;
         case ADDNOTEINLIST:
             let params: INoteType = {
                 title: action.filetype === "file-text" ? "新建文件" : "新建markdown文件",
@@ -128,7 +133,6 @@ export function handleNote(state: INoteStoreType = initNote, action: AnyAction) 
                 status: "r",
                 updatetime: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
                 createtime: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-                parentId: action.pId,
                 top: false,
             };
             return {

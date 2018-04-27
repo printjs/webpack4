@@ -16,12 +16,10 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 import {
     addNoteInList,
-    IAddNoteType,
     findNoteById,
     IchangeType,
     updateNoteInList,
     INoteType,
-    getNoteList,
     delNoteInList,
 } from "@views/note/_catalog/redux";
 import classNames from "classnames";
@@ -31,6 +29,7 @@ import { QuillEditor } from "@components/quill";
 import { NoteTabs } from "@views/note/_notetab";
 import { ipcRenderer } from "electron";
 import { CONSTANT } from "@main/share/constant";
+import moment from "moment";
 
 
 
@@ -38,13 +37,12 @@ import { CONSTANT } from "@main/share/constant";
 interface INoteContainerType {
     tabs: ITabType[];
     defaultKey: string;
-    addFile: (opt: IAddNoteType) => void;
+    addFile: (fileType: "file-text" | "file-markdown") => void;
     findNoteById: (id: string) => void;
     noteDetail: INoteType;
     noteList: INoteType[];
     updateNoteInList: (id: string, item: IchangeType[]) => void;
     updateTab: (opt: ITabType) => void;
-    getNoteList: () => void;
     defaultTab: (key: string) => void;
     addTab: (opt: {
         key: string;
@@ -58,21 +56,19 @@ class Note extends React.Component<INoteContainerType, {}> {
 
     constructor(props: INoteContainerType) {
         super(props);
-        const { getNoteList } = this.props;
         ipcRenderer.send(CONSTANT.NOTEFILE.GETALL);
-        // getNoteList();
         this.createNote.bind(this);
+    }
+
+    public componentWillUnmount() {
+        const {} = this.props;
     }
 
 
     public async createNote(type: "file-text" | "file-markdown") {
         let temp = new Date().getTime() + "";
         const { addFile } = this.props;
-        addFile({
-            id: generator.createId(temp),
-            filetype: type,
-            pId: "1",
-        });
+        addFile(type);
     }
 
 
@@ -301,8 +297,8 @@ function mapStateToProps(state: IStore) {
 
 function mapDispatchToProps(dispatch: (p: any) => void) {
     return {
-        addFile: (opt: IAddNoteType) => {
-            dispatch(addNoteInList(opt));
+        addFile: (fileType: "file-text" | "file-markdown") => {
+            dispatch(addNoteInList(fileType));
         },
         findNoteById: (id: string) => {
             dispatch(findNoteById(id));
@@ -312,9 +308,6 @@ function mapDispatchToProps(dispatch: (p: any) => void) {
         },
         updateTab: (opt: ITabType) => {
             dispatch(updateTab(opt));
-        },
-        getNoteList: () => {
-            dispatch(getNoteList());
         },
         defaultTab: (key: string) => {
             dispatch(defaultTab(key));

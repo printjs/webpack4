@@ -2,36 +2,86 @@ import * as fs from "fs";
 import { config } from "@main/share/config";
 import * as path from "path";
 import { Buffer } from "buffer";
+import { zip } from "@main/controller/compress";
+import { INoteType } from "@views/note/_catalog/redux";
+
+function isString(x: any): x is string {
+    return typeof x !== "undefined";
+}
+
+function isINoteType(x: any): x is INoteType {
+    return typeof x !== "undefined";
+}
 
 class Utils {
     public async getAllNotes() {
-        return new Promise((resolve, reject) => {
-            fs.readdir(config.noteFiles, async (err, files) => {
-                try {
-                    const datas = await Promise.all(files.map(async (filename, $index) => {
-                        return await this.openNote("r", filename) || "";
-                    }));
-                    const temp1: any = datas.filter((data) => data !== "");
-                    const result = temp1.map((item: string, $index: number) => {
-                        try {
-                            return JSON.parse(item);
-                        } catch (error) {
-                            reject(error);
-                        }
+        const files = await this.readDir().catch((err) => {
+            console.warn(err);
+        });
+        const datas: any[] = [];
+        // for (let i = 0, len = files.length; i < len; i++) {
+        //     const fullname = files[i];
+        //     const filename = fullname.replace(".zip", "");
+        //     await zip.deCompress(filename);
+        //     const context = await this.openNote("r", config.context);
+        //     let attr = await this.openNote("r", config.attr);
+        //     await this.delNote(config.context);
+        //     await this.delNote(config.attr);
+        //     if (isString(attr)) {
+        //         attr = JSON.parse(attr);
+        //         if (isINoteType(attr)) {
+        //             datas.push({
+        //                 title: attr.title,
+        //                 context: context,
+        //                 createtime: attr.createtime,
+        //                 updatetime: attr.updatetime,
+        //                 filetype: attr.filetype,
+        //                 id: filename,
+        //                 top: attr.top,
+        //             });
+        //         }
+        //     }
+        // }
+        for (let fullname of files) {
+            const filename = fullname.replace(".zip", "");
+            await zip.deCompress(filename);
+            const context = await this.openNote("r", config.context);
+            let attr = await this.openNote("r", config.attr);
+            await this.delNote(config.context);
+            await this.delNote(config.attr);
+            if (isString(attr)) {
+                attr = JSON.parse(attr);
+                if (isINoteType(attr)) {
+                    datas.push({
+                        title: attr.title,
+                        context: context,
+                        createtime: attr.createtime,
+                        updatetime: attr.updatetime,
+                        filetype: attr.filetype,
+                        id: filename,
+                        top: attr.top,
                     });
-                    resolve(result);
-                } catch (err) {
-                    reject(err);
                 }
-            });
+            }
+        }
+        return datas;
+    }
+
+    public async syncNote(arr: INoteType[]) {
+        return new Promise((resolve, reject) => {
+            // for (item of arr) {
+
+            // }
         });
     }
 
-    public async delNote(path: string) {
+    public async delNote(filename: string) {
         return new Promise((resolve, reject) => {
-            fs.unlink(path, (err) => {
-                if (err) {
-                    throw err;
+            fs.unlink(path.join(config.path, filename), (err) => {
+                try {
+                    resolve(true);
+                } catch (err) {
+                    reject(err);
                 }
             });
         });
@@ -45,12 +95,15 @@ class Utils {
                 }
             });
         });
+    }
 
+    public async create(id: string, context: string, attr: string) {
+        await zip.compress(id, context, attr);
     }
 
     public async openNote(operation: "r" | "w" | "a", filename: string, data?: string | Buffer, mode?: number) {
         return new Promise((resolve, reject) => {
-            fs.open(path.join(config.noteFiles, filename), operation, async (err, fd) => {
+            fs.open(path.join(config.path, filename), operation, async (err, fd) => {
                 try {
                     switch (operation) {
                         case "r":
@@ -104,20 +157,21 @@ class Utils {
             });
         });
     }
+
+
+    private async readDir(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            fs.readdir(config.path, async (err, files) => {
+                try {
+                    resolve(files);
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        });
+    }
+
 }
 
 
 export const noteUtils = new Utils();
-
-
-
-
-// async function test() {
-//     await noteUtils.getAllNotes(path.join(__dirname, "../../../files"));
-//     await noteUtils.openNote("w", Buffer.from("dsfjklsadjfkasdfjkasjdfasjldf"));
-//     await noteUtils.openNote("r", "");
-// }
-
-// test().catch((err: string) => {
-//     console.warn(err);
-// });

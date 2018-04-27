@@ -55,6 +55,11 @@ const mainConfig: webpack.Configuration = {
     resolve: {
         extensions: [".ts", ".js", ".json"],
         alias: {
+            "@route": path.join(__dirname, "/src/route/"),
+            "@views": path.join(__dirname, "/src/views/"),
+            "@store": path.join(__dirname, "/src/store/"),
+            "@components": path.join(__dirname, "/src/components"),
+            "@utils": path.join(__dirname, "/src/utils"),
             "@main": path.join(__dirname, "/src/main_process"),
         },
     },

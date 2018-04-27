@@ -1,5 +1,7 @@
 import * as path from "path";
 
 export const config = {
-    noteFiles: path.join(__dirname, "../../../files/"),
+    path: path.join(process.cwd(), "/files"),
+    context: "context",
+    attr: "attr",
 };

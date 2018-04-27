@@ -5,19 +5,23 @@ import { noteUtils } from "@main/controller/note";
 export class Dispatch {
     constructor() {
         ipcMain.on(CONSTANT.NOTEFILE.CREATE, async (event: IpcMessageEvent, arg: any) => {
-            console.log("213123");
-            event.sender.send(CONSTANT.NOTEFILE.CREATE, await noteUtils.openNote("w", "data"));
+            const { id, context, attr } = arg;
+            noteUtils.create(id, context, JSON.stringify(attr));
         });
         ipcMain.on(CONSTANT.NOTEFILE.UPDATE, () => {
             console.log("213123");
         });
-        ipcMain.on(CONSTANT.NOTEFILE.DEL, () => {
-            console.log("213123");
+        ipcMain.on(CONSTANT.NOTEFILE.DEL, async (event: IpcMessageEvent, arg: { id: string }) => {
+            const { id } = arg;
+            await noteUtils.delNote(`${id}.zip`).catch((err) => {
+                console.warn(err);
+                event.sender.send(CONSTANT.NOTEFILE.DEL, { status: false, id: id });
+            });
+            event.sender.send(CONSTANT.NOTEFILE.DEL, { status: true, id: id });
         });
         ipcMain.on(CONSTANT.NOTEFILE.GETALL, async (event: IpcMessageEvent, arg: any) => {
-            event.sender.send(CONSTANT.NOTEFILE.GETALL, await noteUtils.getAllNotes().catch((err) => {
-                console.warn(err);
-            }));
+            let datas = await noteUtils.getAllNotes();
+            event.sender.send(CONSTANT.NOTEFILE.GETALL, await noteUtils.getAllNotes());
         });
     }
 }

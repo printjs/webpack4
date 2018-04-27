@@ -7,6 +7,8 @@ import { generator } from "@utils/generator";
 import { addTab, defaultTab, ITabType } from "@views/note/_notetab/redux";
 import { INoteType, IchangeType } from "@views/note/_catalog/redux";
 import { markdown } from "@utils/md";
+import { ipcRenderer, IpcMessageEvent } from "electron";
+import { CONSTANT } from "@main/share/constant";
 /**
  * icon
  * file-text
@@ -35,6 +37,28 @@ interface ICatalog {
 export class NoteCatalog extends React.Component<ICatalog, {}> {
     constructor(props: ICatalog) {
         super(props);
+        ipcRenderer.on(CONSTANT.NOTEFILE.DEL, (event: IpcMessageEvent, params: { id: string; status: boolean }) => {
+            const { id, status } = params;
+            const { delNoteInList, delTab, tabs, findNoteById } = this.props;
+            if (status) {
+                for (let i = 0, len = tabs.length; i < len; i++) {
+                    if (tabs[i].key === id) {
+                        if (tabs[i - 1]) {
+                            findNoteById(tabs[i - 1].key);
+                        } else if (tabs[i + 1]) {
+                            findNoteById(tabs[i + 1].key);
+                        } else {
+                            // console.warn("");
+                        }
+                    }
+                }
+                delTab(id);
+                delNoteInList(id);
+                message.success(`${id}`);
+            } else {
+                message.success("删除失败");
+            }
+        });
     }
 
     public handleClick = (e: any, key: string) => {
@@ -55,22 +79,7 @@ export class NoteCatalog extends React.Component<ICatalog, {}> {
 
     public confirm(e: any, id: string) {
         e.stopPropagation();
-        const { delNoteInList, delTab, tabs, findNoteById } = this.props;
-        for (let i = 0, len = tabs.length; i < len; i++) {
-            if (tabs[i].key === id) {
-                if (tabs[i - 1]) {
-                    findNoteById(tabs[i - 1].key);
-                } else if (tabs[i + 1]) {
-                    findNoteById(tabs[i + 1].key);
-                } else {
-                    // console.warn("");
-                }
-            }
-        }
-        delTab(id);
-        delNoteInList(id);
-
-        message.success(`${id}`);
+        ipcRenderer.send(CONSTANT.NOTEFILE.DEL, { id: id });
     }
 
     public renderText(str: string, fileType: "file-text" | "file-markdown") {
