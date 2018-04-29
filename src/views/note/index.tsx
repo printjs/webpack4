@@ -29,7 +29,8 @@ import { QuillEditor } from "@components/quill";
 import { NoteTabs } from "@views/note/_notetab";
 import { ipcRenderer } from "electron";
 import { CONSTANT } from "@main/share/constant";
-import moment from "moment";
+import "github-markdown-css";
+import { Readme } from "@views/note/_readme/readme";
 
 
 
@@ -61,7 +62,8 @@ class Note extends React.Component<INoteContainerType, {}> {
     }
 
     public componentWillUnmount() {
-        const {} = this.props;
+        const { noteList } = this.props;
+        ipcRenderer.send(CONSTANT.NOTEFILE.SYNC, noteList);
     }
 
 
@@ -202,6 +204,45 @@ class Note extends React.Component<INoteContainerType, {}> {
                 );
             }
         };
+        const renderByDefaultKey = () => {
+            const { defaultKey } = this.props;
+            if (defaultKey === "") {
+                return (
+                    <Readme />
+                );
+            } else {
+                return (
+                    <React.Fragment>
+                        <div className="note-title-panel">
+                            <RadioGroup size="small" value={filetype}>
+                                <RadioButton value={filetype}><Icon type={filetype} /></RadioButton>
+                            </RadioGroup>
+                            <RadioGroup value={status} size="small" onChange={this.changeStatus}>
+                                <RadioButton value="r">
+                                    <Icon type="eye" />
+                                </RadioButton>
+                                <RadioButton value="w">
+                                    <Icon type="edit" />
+                                </RadioButton>
+                            </RadioGroup>
+                            <Input
+                                className="note-title"
+                                placeholder="标题"
+                                value={title}
+                                size="large"
+                                onChange={this.changeTitle}
+                                style={{
+                                    borderWidth: "0",
+                                    boxShadow: "0 0 0 0 transparent",
+                                }} />
+                        </div>
+                        <section className="md-rich-editor">
+                            {renderDom()}
+                        </section>
+                    </React.Fragment>
+                );
+            }
+        };
         return (
             <React.Fragment>
                 <div className="note-catalog-panel">
@@ -242,32 +283,8 @@ class Note extends React.Component<INoteContainerType, {}> {
                             findNoteById={findNoteById}
                         />
                         <div className="MD">
-                            <div className="note-title-panel">
-                                <RadioGroup size="small" value={filetype}>
-                                    <RadioButton value={filetype}><Icon type={filetype} /></RadioButton>
-                                </RadioGroup>
-                                <RadioGroup value={status} size="small" onChange={this.changeStatus}>
-                                    <RadioButton value="r">
-                                        <Icon type="eye" />
-                                    </RadioButton>
-                                    <RadioButton value="w">
-                                        <Icon type="edit" />
-                                    </RadioButton>
-                                </RadioGroup>
-                                <Input
-                                    className="note-title"
-                                    placeholder="标题"
-                                    value={title}
-                                    size="large"
-                                    onChange={this.changeTitle}
-                                    style={{
-                                        borderWidth: "0",
-                                        boxShadow: "0 0 0 0 transparent",
-                                    }} />
-                            </div>
-                            <section className="md-rich-editor">
-                                {renderDom()}
-                            </section>
+                            {/* <Readme /> */}
+                            {renderByDefaultKey()}
                         </div>
                     </div>
                 </div>

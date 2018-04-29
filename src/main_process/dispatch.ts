@@ -1,6 +1,8 @@
 import { ipcMain, IpcMessageEvent } from "electron";
 import { CONSTANT } from "@main/share/constant";
 import { noteUtils } from "@main/controller/note";
+import { INoteType } from "@views/note/_catalog/redux";
+import { readme } from "@main/note/readme";
 
 export class Dispatch {
     constructor() {
@@ -21,7 +23,16 @@ export class Dispatch {
         });
         ipcMain.on(CONSTANT.NOTEFILE.GETALL, async (event: IpcMessageEvent, arg: any) => {
             let datas = await noteUtils.getAllNotes();
-            event.sender.send(CONSTANT.NOTEFILE.GETALL, await noteUtils.getAllNotes());
+            event.sender.send(CONSTANT.NOTEFILE.GETALL, datas);
+        });
+        ipcMain.on(CONSTANT.NOTEFILE.SYNC, async (event: IpcMessageEvent, arg: INoteType[]) => {
+            noteUtils.syncNote(arg);
+        });
+        ipcMain.on(CONSTANT.WELCOME.README, async (event: IpcMessageEvent, arg: string) => {
+            const data = await readme(arg).catch((err) => {
+                console.warn(err);
+            });
+            event.sender.send(CONSTANT.WELCOME.README, data);
         });
     }
 }

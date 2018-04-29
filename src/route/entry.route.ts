@@ -9,4 +9,8 @@ export const entryRoute: IRouteProps[] = [
         icon: "book",
         component: NoteComponent,
     },
+    {
+        path: "/home",
+        icon: "home",
+    },
 ];

@@ -5,6 +5,7 @@ import { Buffer } from "buffer";
 import { zip } from "@main/controller/compress";
 import { INoteType } from "@views/note/_catalog/redux";
 
+
 function isString(x: any): x is string {
     return typeof x !== "undefined";
 }
@@ -42,9 +43,16 @@ class Utils {
         //         }
         //     }
         // }
-        for (let fullname of files) {
-            const filename = fullname.replace(".zip", "");
-            await zip.deCompress(filename);
+        console.log(files);
+        for (let filename of files) {
+            let flag = true;
+            await zip.deCompress(filename).catch((err) => {
+                flag = false;
+                console.warn(err);
+            });
+            if (!flag) {
+                continue;
+            }
             const context = await this.openNote("r", config.context);
             let attr = await this.openNote("r", config.attr);
             await this.delNote(config.context);
@@ -59,6 +67,7 @@ class Utils {
                         updatetime: attr.updatetime,
                         filetype: attr.filetype,
                         id: filename,
+                        status: attr.status,
                         top: attr.top,
                     });
                 }
@@ -68,11 +77,19 @@ class Utils {
     }
 
     public async syncNote(arr: INoteType[]) {
-        return new Promise((resolve, reject) => {
-            // for (item of arr) {
-
-            // }
+        const files = await this.readDir().catch((err) => {
+            console.warn(err);
         });
+        for (let item of arr) {
+            await zip.compress(item.id, item.context, JSON.stringify({
+                title: item.title,
+                createtime: item.createtime,
+                updatetime: item.updatetime,
+                filetype: item.filetype,
+                status: item.status,
+                top: item.top,
+            }));
+        }
     }
 
     public async delNote(filename: string) {
@@ -98,13 +115,22 @@ class Utils {
     }
 
     public async create(id: string, context: string, attr: string) {
-        await zip.compress(id, context, attr);
+        return await zip.compress(id, context, attr);
     }
 
     public async openNote(operation: "r" | "w" | "a", filename: string, data?: string | Buffer, mode?: number) {
         return new Promise((resolve, reject) => {
             fs.open(path.join(config.path, filename), operation, async (err, fd) => {
-                try {
+                if (err) {
+                    reject(err);
+                    if (err.code === "ENOENT") {
+                        console.error("myfile does not exist");
+                    } else if (err.code === "EEXIST") {
+                        console.error("myfile already exists");
+                    } else if (err.code === "EISDIR") {
+                        console.error("myfile is directory");
+                    }
+                } else {
                     switch (operation) {
                         case "r":
                             resolve(await this.readMyData(fd));
@@ -119,15 +145,6 @@ class Utils {
                             break;
                     }
                     fs.closeSync(fd);
-                } catch (err) {
-                    reject(err);
-                    if (err.code === "ENOENT") {
-                        console.error("myfile does not exist");
-                    } else if (err.code === "EEXIST") {
-                        console.error("myfile already exists");
-                    } else if (err.code === "EISDIR") {
-                        console.error("myfile is directory");
-                    }
                 }
             });
         });
@@ -136,10 +153,10 @@ class Utils {
     private async readMyData(fd: number) {
         return new Promise((resolve, reject) => {
             fs.readFile(fd, "utf8", async (err, data) => {
-                try {
-                    resolve(data);
-                } catch (err) {
+                if (err) {
                     reject(err);
+                } else {
+                    resolve(data);
                 }
             });
         });
@@ -149,10 +166,10 @@ class Utils {
     private async writeMyData(fd: number, data: string | Buffer) {
         return new Promise((resolve, reject) => {
             fs.writeFile(fd, JSON.stringify(data), (err) => {
-                try {
-                    resolve("The file has been saved!");
-                } catch (err) {
+                if (err) {
                     reject(err);
+                } else {
+                    resolve("The file has been saved!");
                 }
             });
         });
@@ -162,10 +179,23 @@ class Utils {
     private async readDir(): Promise<any> {
         return new Promise((resolve, reject) => {
             fs.readdir(config.path, async (err, files) => {
-                try {
-                    resolve(files);
-                } catch (err) {
+                if (err) {
                     reject(err);
+                } else {
+                    resolve(files);
+                }
+            });
+        });
+    }
+
+    private async stat(path: string) {
+        return new Promise((resolve, reject) => {
+            fs.stat(path, (err, stat) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    console.warn(stat);
+                    resolve(stat);
                 }
             });
         });

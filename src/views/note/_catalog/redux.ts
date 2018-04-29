@@ -10,6 +10,7 @@ export const DELNOTEINLIST = "删除笔记列表中的文件";
 export const UPDATENOTEINLIST = "更新笔记列表";
 export const FINDNOTEBYID = "通过id来查找笔记";
 export const SYNCNOTELIST = "同步笔记列表";
+export const MERGENOTELIST = "将本地文件merge到系统中";
 
 export interface INoteType {
     title: string;
@@ -22,9 +23,15 @@ export interface INoteType {
     top: boolean;
 }
 
-export function syncNoteList(list: INoteType[]) {
+export function syncNoteList() {
     return {
         type: SYNCNOTELIST,
+    };
+}
+
+export function mergeNoteList(list: INoteType[]) {
+    return {
+        type: MERGENOTELIST,
         noteList: list,
     };
 }
@@ -105,8 +112,7 @@ const initNote: INoteStoreType = {
 };
 
 ipcRenderer.on(CONSTANT.NOTEFILE.GETALL, async (event: IpcMessageEvent, args: any) => {
-    console.log(args);
-    store.dispatch(syncNoteList(args));
+    store.dispatch(mergeNoteList(args));
 });
 
 ipcRenderer.on(CONSTANT.NOTEFILE.CREATE, async (event: IpcMessageEvent, args: any) => {
@@ -115,7 +121,7 @@ ipcRenderer.on(CONSTANT.NOTEFILE.CREATE, async (event: IpcMessageEvent, args: an
 
 export function handleNote(state: INoteStoreType = initNote, action: AnyAction) {
     switch (action.type) {
-        case SYNCNOTELIST:
+        case MERGENOTELIST:
             return {
                 note: {
                     ...state.note,
