@@ -14,9 +14,9 @@ const mainConfig: webpack.Configuration = {
         main: path.join(__dirname, "./main.ts"),
     },
     devtool: "#source-map",
-    externals: [
-        ...Object.keys(dependencies || {}),
-    ],
+    // externals: [
+    //     ...Object.keys(dependencies || {}),
+    // ],
     mode: env(process.env.NODE_ENV),
     module: {
         rules: [
