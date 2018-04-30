@@ -10,7 +10,7 @@ function createWindow() {
 
     // 然后加载应用的 index.html。
     const prod: url.UrlObject = {
-        pathname: path.join(__dirname, "/index.html"),
+        pathname: path.join(process.cwd(), "dist/index.html"),
         protocol: "file:",
         slashes: true,
     };

@@ -8,5 +8,5 @@
         "PORT": "9999"
     },
     "ext": "ts,tsx",
-    "exec": "npm run main:dev && npm run electron:dev"
+    "exec": "npm run main:dev"
 }
