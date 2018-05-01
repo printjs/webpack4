@@ -1,0 +1,23 @@
+{
+    "name": "corky_cherry",
+    "version": "1.0.0",
+    "description": "share",
+    "main": "./main.js",
+    "scripts": {
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/wjtGitHub/webpack4.git"
+    },
+    "author": "wjt",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/wjtGitHub/webpack4/issues"
+    },
+    "homepage": "https://github.com/wjtGitHub/webpack4#readme",
+    "devDependencies": {
+    },
+    "dependencies": {
+    }
+  }
+  

@@ -2,7 +2,7 @@
   "name": "webpack4",
   "version": "1.0.0",
   "description": "webpack4 ts",
-  "main": "./dist/main.js",
+  "main": "./index.js",
   "scripts": {
     "tslint": "node_modules/.bin/tslint --init",
     "tsconfig": "node_modules/.bin/tsc --init",

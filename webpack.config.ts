@@ -158,7 +158,8 @@ const webpackConfig: webpack.Configuration = {
 if (isArr(webpackConfig.plugins) && process.env.NODE_ENV === "production") {
     webpackConfig.plugins.push(
         new CopyWebpackPlugin([
-            { from: "package.json", to: "./dist/package.json" },
+            { from: "config/package.json", to: "package.json" },
+            { from: "config/note.readme.md", to: "note.readme.md" },
         ]),
     );
 }

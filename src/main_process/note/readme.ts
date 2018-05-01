@@ -3,7 +3,9 @@ import * as path from "path";
 
 export async function readme(url: string): Promise<any> {
     return new Promise((reslove, reject) => {
-        fs.open(path.join(process.cwd(), "config/note.readme.md"), "r", (err, fd) => {
+        let url: string = process.env.NODE_ENV === "development" ? 
+            path.join(process.cwd(), "config/note.readme.md") : path.join(__dirname, "note.readme.md");
+        fs.open(url, "r", (err, fd) => {
             if (err) {
                 reject(err);
             } else {
