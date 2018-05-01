@@ -49,11 +49,6 @@ export function addNoteInList(fileType: "file-text" | "file-markdown") {
         createtime: moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
         top: false,
     };
-    ipcRenderer.send(CONSTANT.NOTEFILE.CREATE, {
-        id: id,
-        context: fileType === "file-markdown" ? "新建markdown文件" : "新建文件",
-        attr: temp,
-    });
     return Object.assign({
         type: ADDNOTEINLIST,
     }, temp);
@@ -115,9 +110,6 @@ ipcRenderer.on(CONSTANT.NOTEFILE.GETALL, async (event: IpcMessageEvent, args: an
     store.dispatch(mergeNoteList(args));
 });
 
-ipcRenderer.on(CONSTANT.NOTEFILE.CREATE, async (event: IpcMessageEvent, args: any) => {
-    console.log(args);
-});
 
 export function handleNote(state: INoteStoreType = initNote, action: AnyAction) {
     switch (action.type) {

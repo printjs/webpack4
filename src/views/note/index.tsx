@@ -1,5 +1,7 @@
 import * as React from "react";
 import "./style.styl";
+import "./quill.snow.css";
+import "./simple.mde.css";
 import { Input, Icon, Button, Radio } from "antd";
 import { connect } from "react-redux";
 import { IStore } from "@store/store";
@@ -31,6 +33,7 @@ import { ipcRenderer } from "electron";
 import { CONSTANT } from "@main/share/constant";
 import "github-markdown-css";
 import { Readme } from "@views/note/_readme/readme";
+import { syncNoteTask } from "@utils/task";
 
 
 
@@ -61,9 +64,15 @@ class Note extends React.Component<INoteContainerType, {}> {
         this.createNote.bind(this);
     }
 
+
+    public componentDidMount() {
+        syncNoteTask.start();
+    }
+
     public componentWillUnmount() {
         const { noteList } = this.props;
         ipcRenderer.send(CONSTANT.NOTEFILE.SYNC, noteList);
+        syncNoteTask.stop();
     }
 
 

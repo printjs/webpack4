@@ -4,11 +4,17 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const autoprefixer = require("autoprefixer");
 const tsImportPluginFactory = require("ts-import-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 
 
 function env(global_env: any): "development" | "production" {
     return global_env ? global_env : "development";
+}
+
+
+function isArr(x: any): x is any[] {
+    return typeof x !== "undefined";
 }
 
 
@@ -141,10 +147,21 @@ const webpackConfig: webpack.Configuration = {
         new webpack.NamedModulesPlugin(),
         new HtmlWebpackPlugin({
             template: path.join(__dirname, "/config/template.html"),
+            title: "Corky Cherry",
         }),
         css,
         stylus,
     ],
 };
+
+
+if (isArr(webpackConfig.plugins) && process.env.NODE_ENV === "production") {
+    webpackConfig.plugins.push(
+        new CopyWebpackPlugin([
+            { from: "package.json", to: "./dist/package.json" },
+        ]),
+    );
+}
+
 
 export default webpackConfig;

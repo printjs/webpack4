@@ -54,7 +54,7 @@ export class NoteCatalog extends React.Component<ICatalog, {}> {
                 }
                 delTab(id);
                 delNoteInList(id);
-                message.success(`${id}`);
+                message.success("删除成功");
             } else {
                 message.success("删除失败");
             }
@@ -128,16 +128,16 @@ export class NoteCatalog extends React.Component<ICatalog, {}> {
                             <List.Item.Meta
                                 title={
                                     <React.Fragment>
-                                        <Icon
+                                        {/* <Icon
                                             type="pushpin-o"
                                             style={{
                                                 cursor: "pointer",
                                                 color: item.top ? "#096dd9" : "ccc",
                                             }}
                                             onClick={(e) => this.top(item.id, item.top, e)}
-                                        />
+                                        /> */}
                                         <Icon type={item.filetype} />
-                                        <i>{item.title}</i>
+                                        <b>{item.title}</b>
                                     </React.Fragment>
                                 }
                                 description={

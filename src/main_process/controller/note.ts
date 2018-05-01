@@ -95,20 +95,10 @@ class Utils {
     public async delNote(filename: string) {
         return new Promise((resolve, reject) => {
             fs.unlink(path.join(config.path, filename), (err) => {
-                try {
-                    resolve(true);
-                } catch (err) {
-                    reject(err);
-                }
-            });
-        });
-    }
-
-    public async rename(old: string, newName: string) {
-        return new Promise((resolve, reject) => {
-            fs.rename(old, newName, (err) => {
                 if (err) {
-                    throw err;
+                    reject(err);
+                } else {
+                    resolve(true);
                 }
             });
         });
@@ -118,7 +108,19 @@ class Utils {
         return await zip.compress(id, context, attr);
     }
 
-    public async openNote(operation: "r" | "w" | "a", filename: string, data?: string | Buffer, mode?: number) {
+    public async initFilesDir() {
+        return new Promise((resolve, reject) => {
+            fs.mkdir(config.path, (err) => {
+                if (err) {
+                    resolve(true);
+                } else {
+                    reject(err);
+                }
+            });
+        });
+    }
+
+    private async openNote(operation: "r" | "w" | "a", filename: string, data?: string | Buffer, mode?: number) {
         return new Promise((resolve, reject) => {
             fs.open(path.join(config.path, filename), operation, async (err, fd) => {
                 if (err) {

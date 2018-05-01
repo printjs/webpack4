@@ -72,27 +72,6 @@ export class NoteTabs extends React.Component<INoteTabsType, {}> {
                         </TabPane>
                     );
                 })}
-                <TabPane tab="Tab 2" key="2"></TabPane>
-                <TabPane tab="Tab 3" key="31"></TabPane>
-                <TabPane tab="Tab 3" key="32"></TabPane>
-                <TabPane tab="Tab 3" key="33"></TabPane>
-                <TabPane tab="Tab 3" key="34"></TabPane>
-                <TabPane tab="Tab 3" key="35"></TabPane>
-                <TabPane tab="Tab 3" key="36"></TabPane>
-                <TabPane tab="Tab 3" key="37"></TabPane>
-                <TabPane tab="Tab 3" key="38"></TabPane>
-                <TabPane tab="Tab 3" key="39"></TabPane>
-                <TabPane tab="Tab 3" key="311"></TabPane>
-                <TabPane tab="Tab 3" key="322"></TabPane>
-                <TabPane tab="Tab 3" key="333"></TabPane>
-                <TabPane tab="Tab 3" key="344"></TabPane>
-                <TabPane tab="Tab 3" key="355"></TabPane>
-                <TabPane tab="Tab 3" key="366"></TabPane>
-                <TabPane tab="Tab 3" key="377"></TabPane>
-                <TabPane tab="Tab 3" key="388"></TabPane>
-                <TabPane tab="Tab 3" key="399"></TabPane>
-                <TabPane tab="Tab 3" key="3123"></TabPane>
-                <TabPane tab="Tab 3" key="3"></TabPane>
             </Tabs>
         );
     }
