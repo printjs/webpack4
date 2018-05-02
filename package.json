@@ -1,5 +1,5 @@
 {
-  "name": "webpack4",
+  "name": "corkycherry",
   "version": "1.0.0",
   "description": "webpack4 ts",
   "main": "./index.js",
@@ -8,6 +8,7 @@
     "tsconfig": "node_modules/.bin/tsc --init",
     "rm:rf": "node_modules/.bin/ts-node config/del.dist.ts",
     "build": "npm run rm:rf&&npm run renderer&&npm run main",
+    "build:win32": "node_modules/.bin/electron-packager ./dist corkycherry --platform=win32 --arch=x64 --out=./temp --overwrite",
     "start": "nodemon",
     "electron": "npm run build&&cross-env NODE_ENV='production' node_modules/.bin/electron .",
     "electron:dev": "node_modules/.bin/electron index.js --enable-logging",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@types/archiver": "^2.1.1",
     "@types/classnames": "^2.2.3",
+    "@types/electron-winstaller": "^2.6.1",
     "@types/extract-zip": "^1.6.2",
     "@types/highlight.js": "^9.12.2",
     "@types/jssha": "0.0.29",
@@ -49,6 +51,8 @@
     "css-loader": "^0.28.10",
     "electron": "^1.8.4",
     "electron-packager": "^12.0.1",
+    "electron-winstaller": "^2.6.4",
+    "electron-wix-msi": "^1.3.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "fastify": "^1.1.1",
     "html-webpack-plugin": "^3.0.6",
