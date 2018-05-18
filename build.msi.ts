@@ -4,13 +4,13 @@ import * as path from "path";
 
 // Step 1: Instantiate the MSICreator
 const msiCreator = new MSICreator({
-    appDirectory: path.join(__dirname, "temp/corkycherry-win32-x64"),
-    description: "wjt's application",
-    exe: "corkycherry",
-    name: "corkycherry",
-    manufacturer: "wjt Inc.",
+    appDirectory: path.join(__dirname, "release/win-unpacked"),
+    description: "corgicherry",
+    exe: "corgicherry",
+    name: "corgicherry",
+    manufacturer: "corgicherry",
     version: "0.1",
-    outputDirectory: path.join(__dirname, "release/corkycherry-win32-x64"),
+    outputDirectory: path.join(__dirname, "release/corgicherry-win32-x64"),
 });
 
 async function buildmsi() {
