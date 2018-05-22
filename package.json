@@ -8,9 +8,6 @@
     "tsconfig": "node_modules/.bin/tsc --init",
     "rm:rf": "node_modules/.bin/ts-node config/del.dist.ts",
     "build": "npm run rm:rf&&npm run renderer&&npm run main",
-    "build:win32": "node_modules/.bin/electron-packager ./dist corkycherry --platform=win32 --arch=x64 --out=./temp --overwrite",
-    "build:deb": "node_modules/.bin/electron-packager ./dist corkycherry --platform=linux --arch=x64 --out=./temp --overwrite",
-    "build:osx": "node_modules/.bin/electron-packager ./dist corkycherry --platform=darwin --arch=x64 --out=./temp --overwrite",
     "start": "nodemon",
     "electron": "npm run build&&cross-env NODE_ENV='production' node_modules/.bin/electron .",
     "electron:dev": "node_modules/.bin/electron index.js --enable-logging",
@@ -18,19 +15,21 @@
     "renderer": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli  --config webpack.config.ts",
     "renderer:dev": "cross-env NODE_ENV='development' node_modules/.bin/ts-node server.ts",
     "win": "node_modules/.bin/electron-builder --win",
-    "linux":"node_modules/.bin/electron-builder --linux"
+    "linux": "node_modules/.bin/electron-builder --linux"
   },
   "build": {
-    "appId": "corgicherry",
-    "productName": "wjt",
+    "appId": "com.electron.corgicherry",
+    "productName": "corgicherry",
     "copyright": "Copyright © 2018 wjt.",
     "win": {
-      "target": [{
-        "target": "nsis",
-        "arch": [
-          "x64"
-        ]
-      }],
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "./config/app.ico"
     },
     "nsis": {
@@ -41,20 +40,25 @@
       "output": "./release"
     },
     "linux": {
-      "target": [{
-        "target": "deb",
-        "arch": [
-          "x64"
-        ]
-      }],
-      "icon": "./config/app.ico"
+      "target": [
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "/usr/share/corgicherry"
     }
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wjtGitHub/webpack4.git"
   },
-  "author": "yes",
+  "author": {
+    "name": "wjt",
+    "email": "heaventone@yeah.net"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/wjtGitHub/webpack4/issues"
@@ -63,7 +67,6 @@
   "devDependencies": {
     "@types/archiver": "^2.1.1",
     "@types/classnames": "^2.2.3",
-    "@types/electron-winstaller": "^2.6.1",
     "@types/extract-zip": "^1.6.2",
     "@types/highlight.js": "^9.12.2",
     "@types/jssha": "0.0.29",
@@ -85,11 +88,6 @@
     "css-loader": "^0.28.10",
     "electron": "^1.8.4",
     "electron-builder": "^20.13.4",
-    "electron-installer-debian": "^0.8.1",
-    "electron-installer-dmg": "^0.2.1",
-    "electron-packager": "^12.0.1",
-    "electron-winstaller": "^2.6.4",
-    "electron-wix-msi": "^1.3.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "fastify": "^1.1.1",
     "html-webpack-plugin": "^3.0.6",
