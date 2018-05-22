@@ -1,7 +1,7 @@
 {
   "name": "corgicherry",
   "version": "1.0.0",
-  "description": "webpack4 ts",
+  "description": "wjt's application",
   "main": "./dist/main.js",
   "scripts": {
     "tslint": "node_modules/.bin/tslint --init",
@@ -17,19 +17,20 @@
     "main": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli  --config webpack.main.ts",
     "renderer": "cross-env NODE_ENV='production' node_modules/.bin/webpack-cli  --config webpack.config.ts",
     "renderer:dev": "cross-env NODE_ENV='development' node_modules/.bin/ts-node server.ts",
-    "ttt": "node_modules/.bin/electron-builder"
+    "win": "node_modules/.bin/electron-builder --win",
+    "linux":"node_modules/.bin/electron-builder --linux"
   },
   "build": {
-    "appId": "123123123123",
+    "appId": "corgicherry",
+    "productName": "wjt",
+    "copyright": "Copyright © 2018 wjt.",
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
+      "target": [{
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }],
       "icon": "./config/app.ico"
     },
     "nsis": {
@@ -38,6 +39,15 @@
     },
     "directories": {
       "output": "./release"
+    },
+    "linux": {
+      "target": [{
+        "target": "deb",
+        "arch": [
+          "x64"
+        ]
+      }],
+      "icon": "./config/app.ico"
     }
   },
   "repository": {
