@@ -34,6 +34,7 @@ import { CONSTANT } from "@main/share/constant";
 import "github-markdown-css";
 import { Readme } from "@views/note/_readme/readme";
 import { syncNoteTask } from "@utils/task";
+import { SimditorComponent } from "@components/simditor";
 
 
 
@@ -246,7 +247,8 @@ class Note extends React.Component<INoteContainerType, {}> {
                                 }} />
                         </div>
                         <section className="md-rich-editor">
-                            {renderDom()}
+                            {/* {renderDom()} */}
+                            <SimditorComponent />
                         </section>
                     </React.Fragment>
                 );
