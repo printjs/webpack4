@@ -33,13 +33,11 @@ export class App extends React.Component<IAppTypes, {}> {
                     <Layout>
                         <Header style={{ height: 50, background: "#fff", borderBottom: "1px solid #dbdee0" }}></Header>
                         <Content style={{ background: "#fff" }}>
-                            <div className="main-panel">
-                                {entryRoute.map((item, $index) => {
-                                    return (
-                                        <Route path={item.path} component={item.component} key={$index}></Route>
-                                    );
-                                })}
-                            </div>
+                            {entryRoute.map((item, $index) => {
+                                return (
+                                    <Route path={item.path} component={item.component} key={$index}></Route>
+                                );
+                            })}
                         </Content>
                         <Footer style={{
                             height: 40, background: "#fff", borderTop: "1px solid #dbdee0", padding: 0, display: "flex",

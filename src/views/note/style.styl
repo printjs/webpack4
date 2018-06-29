@@ -2,10 +2,11 @@
 .note-catalog-panel
     display flex
     flex-direction column
-    position relative
+    flex-shrink 0
     width 256px
     border-right 1px solid $border-line
     >input 
+        flex-shrink 0
         border-width 0
         &:focus
             border-width 0
@@ -17,6 +18,7 @@
         display flex
         align-items center
         justify-content space-between
+        flex-shrink 0
         font-size 12px
         >.title
             text-align left
@@ -30,81 +32,42 @@
                 &:hover
                     color $main-color
     >.note-tool-panel
-        position absolute
         overflow-y auto
-        flex 0 2 auto
-        transition flex 1s
-        top 70px
-        bottom 0px
-        right 0px
-        left 0px
     >.height0
         flex 0 0 0 
 .note-work-panel
-    position relative
-    flex-grow 1
+    width 100%
     >.note-tabs
-        position absolute
-        left 0px
-        right 0px
-        top 0px
-        bottom 0px
-        display flex
-        flex-direction column
-        >.MD
+        height 100%
+        position relative
+        >.note-title-panel
             padding 0 10px
             display flex
-            flex-grow 1
-            flex-direction column
-            >.note-title-panel
+            align-items center
+            >.ant-radio-group 
                 display flex
-                align-items center
-                >.ant-radio-group 
-                    display flex
-                    margin-right 10px
-                >.ant-input
-                    border-width 0
-                    &:focus
-                        box-shadow 0 0 0 0 transparent
-            >.md-rich-editor
-                display flex
-                flex-direction column
-                flex-grow 1
-                position relative
-                >.markdown-body
-                    display block !important
-                    position absolute
-                    overflow-y auto
-                    left 0px
-                    right 0px
-                    bottom 10px
-                    top 10px
-                >.editor-panel
-                    display flex
-                    flex-grow 1
-                    flex-direction column
-                    >.ql-container 
+                margin-right 10px
+            >.ant-input
+                border-width 0
+                &:focus
+                    box-shadow 0 0 0 0 transparent
+        >.md-rich-editor
+            position absolute
+            left 10px
+            right 10px
+            bottom 0px
+            top 80px
+            >.simditor
+                height 100%
+                border-bottom-width 0px
+                >.simditor-wrapper
+                    height 100%
+                    >.simditor-body
                         position absolute
                         left 0px
-                        right 0px
-                        bottom 10px
-                        top 42px
+                        right 0px 
+                        top 40px
+                        bottom 20px
                         overflow auto
-                        height auto
-                        border-width 0px
-                    >.ql-toolbar
-                        border-width 0px
-                    >.editor-toolbar
-                        border-width 0px
-                        padding 0px
-                    >.CodeMirror
-                        position absolute
-                        left 0px
-                        right 0px
-                        bottom 10px
-                        top 42px
-                        overflow auto
-                        height auto
-                        border-width 0px
-                    >.editor-statusbar
-                        display none
+            >.markdown-body
+                display block !important

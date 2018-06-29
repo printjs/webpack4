@@ -1,18 +1,25 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { sync } from "glob";
 const Simditor = require("simditor");
 require("simditor/styles/simditor.css");
-require("@etu/simditor-markdown");
 
 
+interface ISimditorComponentType {
+    onchange?: (value: string) => void;
+    defaultvalue?: string;
+    placeholder?: string;
+}
 
-export class SimditorComponent extends React.Component<{}, {}> {
+export class SimditorComponent extends React.Component<ISimditorComponentType, {}> {
     private editor: any = null;
 
     public componentDidMount() {
+        const { placeholder } = this.props;
         this.editor = new Simditor({
             textarea: ReactDOM.findDOMNode(this.refs.editor),
-            markdown: true,
+            placeholder: placeholder || "开始愉快的编辑吧",
+            // markdown: true,
             toolbar: [
                 "title",
                 "bold",
@@ -34,7 +41,7 @@ export class SimditorComponent extends React.Component<{}, {}> {
                 "indent",
                 "outdent",
                 "alignment",
-                "markdown",
+                // "markdown",
             ],
             pasteImage: true,
             codeLanguages: [
@@ -61,6 +68,13 @@ export class SimditorComponent extends React.Component<{}, {}> {
             ],
             // optional options
         });
+
+        const { onchange } = this.props;
+        if (onchange) {
+            this.editor.on("valuechanged", (e: any, src: any) => {
+                console.log(this.editor.getValue());
+            });
+        }
     }
 
     public componentWillUnmount() {
@@ -70,8 +84,9 @@ export class SimditorComponent extends React.Component<{}, {}> {
     }
 
     public render() {
+        const { defaultvalue } = this.props;
         return (
-            <textarea ref="editor" placeholder="Balabala" ></textarea>
+            <textarea ref="editor" defaultValue={defaultvalue} ></textarea>
         );
     }
 }

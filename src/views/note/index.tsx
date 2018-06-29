@@ -1,6 +1,5 @@
 import * as React from "react";
 import "./style.styl";
-import "./quill.snow.css";
 import "./simple.mde.css";
 import { Input, Icon, Button, Radio } from "antd";
 import { connect } from "react-redux";
@@ -27,7 +26,6 @@ import {
 import classNames from "classnames";
 import { markdown } from "@utils/md";
 import { MdEditor } from "@components/markdown";
-import { QuillEditor } from "@components/quill";
 import { NoteTabs } from "@views/note/_notetab";
 import { ipcRenderer } from "electron";
 import { CONSTANT } from "@main/share/constant";
@@ -144,6 +142,9 @@ class Note extends React.Component<INoteContainerType, {}> {
         ]);
     }
 
+    public test = (val: string) => {
+        // console
+    }
     public render() {
         const {
             noteDetail,
@@ -160,60 +161,60 @@ class Note extends React.Component<INoteContainerType, {}> {
         } = this.props;
         const { status, filetype, title } = noteDetail;
 
-        const renderDom = () => {
-            const { noteDetail } = this.props;
-            const { status, filetype } = noteDetail;
-            const editClass = classNames({
-                "editor-panel": true,
-                "markdown-body": status === "r",
-            });
+        // const renderDom = () => {
+        //     const { noteDetail } = this.props;
+        //     const { status, filetype } = noteDetail;
+        //     const editClass = classNames({
+        //         "editor-panel": true,
+        //         "markdown-body": status === "r",
+        //     });
 
-            if (status === "r") {
-                return (
-                    <div className={editClass}
-                        style={{
-                            display: "none",
-                        }}
-                        dangerouslySetInnerHTML={{ __html: this.renderText() }}>
-                    </div>
-                );
-            } else if (status === "w") {
-                if (filetype === "file-markdown") {
-                    return (
-                        <div
-                            className="editor-panel"
-                            style={{
-                                display: "flex",
-                            }}
-                        >
-                            <MdEditor
-                                context={this.renderText()}
-                                getText={this.getText} />
-                        </div>
-                    );
-                } else if (filetype === "file-text") {
-                    return (
-                        <div
-                            className="editor-panel"
-                            style={{
-                                display: "flex",
-                            }}>
-                            <QuillEditor
-                                context={this.renderText()}
-                                getHTML={this.getHTML} />
-                        </div>
-                    );
-                } else {
-                    return (
-                        <h1>文件类型错误{filetype}</h1>
-                    );
-                }
-            } else {
-                return (
-                    <h1>状态错误{status}</h1>
-                );
-            }
-        };
+        //     if (status === "r") {
+        //         return (
+        //             <div className={editClass}
+        //                 style={{
+        //                     display: "none",
+        //                 }}
+        //                 dangerouslySetInnerHTML={{ __html: this.renderText() }}>
+        //             </div>
+        //         );
+        //     } else if (status === "w") {
+        //         if (filetype === "file-markdown") {
+        //             return (
+        //                 <div
+        //                     className="editor-panel"
+        //                     style={{
+        //                         display: "flex",
+        //                     }}
+        //                 >
+        //                     <MdEditor
+        //                         context={this.renderText()}
+        //                         getText={this.getText} />
+        //                 </div>
+        //             );
+        //         } else if (filetype === "file-text") {
+        //             return (
+        //                 <div
+        //                     className="editor-panel"
+        //                     style={{
+        //                         display: "flex",
+        //                     }}>
+        //                     <QuillEditor
+        //                         context={this.renderText()}
+        //                         getHTML={this.getHTML} />
+        //                 </div>
+        //             );
+        //         } else {
+        //             return (
+        //                 <h1>文件类型错误{filetype}</h1>
+        //             );
+        //         }
+        //     } else {
+        //         return (
+        //             <h1>状态错误{status}</h1>
+        //         );
+        //     }
+        // };
         const renderByDefaultKey = () => {
             const { defaultKey } = this.props;
             if (defaultKey === "") {
@@ -248,7 +249,10 @@ class Note extends React.Component<INoteContainerType, {}> {
                         </div>
                         <section className="md-rich-editor">
                             {/* {renderDom()} */}
-                            <SimditorComponent />
+                            <SimditorComponent
+                                defaultvalue={noteDetail.context}
+                                onchange={this.test}
+                            />
                         </section>
                     </React.Fragment>
                 );
@@ -293,10 +297,11 @@ class Note extends React.Component<INoteContainerType, {}> {
                             defaultTab={defaultTab}
                             findNoteById={findNoteById}
                         />
-                        <div className="MD">
+                        {renderByDefaultKey()}
+                        {/* <div className="MD"> */}
                             {/* <Readme /> */}
-                            {renderByDefaultKey()}
-                        </div>
+                            
+                        {/* </div> */}
                     </div>
                 </div>
             </React.Fragment>

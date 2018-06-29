@@ -120,7 +120,6 @@
     "history": "^4.7.2",
     "jssha": "^2.3.1",
     "markdown-it": "^8.4.1",
-    "marked": "^0.4.0",
     "moment": "^2.22.0",
     "node-cron": "^1.2.1",
     "quill": "^1.3.6",
@@ -131,7 +130,6 @@
     "react-router-dom": "^4.2.2",
     "redux": "^3.7.2",
     "simditor": "^2.3.6",
-    "simplemde": "^1.11.2",
-    "turndown": "^4.0.2"
+    "simplemde": "^1.11.2"
   }
 }

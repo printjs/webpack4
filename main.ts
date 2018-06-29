@@ -8,7 +8,12 @@ let win: any = null;
 
 function createWindow() {
     // Create the browser window.
-    win = new BrowserWindow({ width: 800, height: 600 });
+    win = new BrowserWindow({
+        width: 1300,
+        height: 900,
+        minWidth: 1300,
+        minHeight: 900,
+    });
 
     // 然后加载应用的 index.html。
     const prod: url.UrlObject = {
